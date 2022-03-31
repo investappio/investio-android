@@ -3,6 +3,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlinx-serialization'
+    alias libs.plugins.protobuf
 }
 
 android {
@@ -46,8 +48,36 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    implementation libs.okhttp
+
+    implementation libs.kotlinx.json
+
+    implementation libs.lifecycle.runtime
+
     implementation libs.hilt.android
     kapt libs.hilt.android.compiler
+
+    implementation libs.datastore
+    implementation libs.protobuf.javalite
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.14.0"
+    }
+
+    // Generates the java Protobuf-lite code for the Protobufs in this project. See
+    // https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
+    // for more information.
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
 }
 
 kapt {
