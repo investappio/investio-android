@@ -1,7 +1,7 @@
 [versions]
 hilt = "2.41"
 kotlin = "1.6.10"
-android = "7.1.1"
+android = "7.1.2"
 lifecycle = "2.4.1"
 
 [libraries]
