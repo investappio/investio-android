@@ -1,0 +1,9 @@
+[versions]
+hilt = "2.41"
+
+[libraries]
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+
+[plugins]
+hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "hilt" }
