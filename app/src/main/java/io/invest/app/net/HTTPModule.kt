@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.invest.app.DataStore
+import io.invest.app.LocalStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Cache
@@ -26,7 +26,7 @@ class HTTPModule {
 
     @Provides
     @Singleton
-    fun provideClient(dataStore: DataStore, cache: Cache): OkHttpClient {
+    fun provideClient(dataStore: LocalStore, cache: Cache): OkHttpClient {
         return OkHttpClient.Builder()
             .cache(cache)
             .addInterceptor { chain ->

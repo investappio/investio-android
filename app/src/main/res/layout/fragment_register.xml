@@ -22,9 +22,10 @@
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/label_full_name" />
+                android:hint="@string/label_name" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -39,6 +40,7 @@
             app:layout_constraintTop_toBottomOf="@id/name_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/username_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/label_username" />
@@ -56,6 +58,7 @@
             app:layout_constraintTop_toBottomOf="@id/username_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/label_email" />
@@ -73,8 +76,10 @@
             app:layout_constraintTop_toBottomOf="@id/email_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dob_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="false"
                 android:hint="@string/label_dob" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,6 +95,7 @@
             app:layout_constraintTop_toBottomOf="@id/dob_layout">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/label_password" />
@@ -105,21 +111,21 @@
             app:layout_constraintTop_toBottomOf="@+id/password_layout">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:id="@+id/register_btn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:text="@string/action_login"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="4dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/action_login" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_btn"
                 android:layout_width="0dp"
-                android:text="@string/action_register"
                 android:layout_height="match_parent"
                 android:layout_marginStart="4dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="@string/action_register" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -5,7 +5,7 @@
     <string name="title_browse">Browse</string>
     <string name="title_feed">Feed</string>
     <string name="title_profile">Profile</string>
-    <string name="label_full_name">Full name</string>
+    <string name="label_name">Name</string>
     <string name="label_username">Username</string>
     <string name="label_email">E-mail</string>
     <string name="label_dob">Birthday</string>

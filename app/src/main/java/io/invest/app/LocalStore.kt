@@ -14,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DataStore @Inject constructor(@ApplicationContext appContext: Context) {
+class LocalStore @Inject constructor(@ApplicationContext appContext: Context) {
     private val dataStore = appContext.dataStore
 
     suspend fun setApiToken(token: String) {

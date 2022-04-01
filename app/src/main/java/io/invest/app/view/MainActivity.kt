@@ -13,7 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import io.invest.app.DataStore
+import io.invest.app.LocalStore
 import io.invest.app.R
 import io.invest.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navGraph: NavGraph
 
     @Inject
-    lateinit var dataStore: DataStore
+    lateinit var dataStore: LocalStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
                     if (dataStore.getApiToken().first().isNullOrBlank()) {
                         withContext(Dispatchers.Main) {
                             navController.navigate(R.id.register_fragment)
