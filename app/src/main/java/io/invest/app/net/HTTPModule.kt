@@ -13,11 +13,11 @@ import okhttp3.OkHttpClient
 import javax.inject.Singleton
 import kotlin.math.pow
 
+private const val HEADER_AUTHORIZATION = "Authorization"
+
 @Module
 @InstallIn(SingletonComponent::class)
 class HTTPModule {
-    private val HEADER_AUTHORIZATION = "Authorization"
-
     @Provides
     fun provideCache(ctx: Application): Cache {
         val cacheSize = 10 * 2.0.pow(20.0)

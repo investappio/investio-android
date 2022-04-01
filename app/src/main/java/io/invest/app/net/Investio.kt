@@ -1,17 +1,20 @@
 package io.invest.app.net
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val BASE_URL = "10.0.2.2:3000"
+private const val TAG = "Investio"
+
 @Singleton
 class Investio @Inject constructor(private val client: OkHttpClient) {
-    val BASE_URL = "10.0.2.2:3000"
-
     suspend fun login(username: String, password: String): String? {
         val url = "http://$BASE_URL/auth/login"
 
@@ -20,58 +23,59 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
             .add("password", password)
             .build()
 
-        val req = Request.Builder().url(url).post(body).build()
+        val req = Request.Builder().url(url).post(body)
 
         return withContext(Dispatchers.IO) {
-            val res = client.newCall(req).execute()
-
-            if (res.code != 200) {
-                res.body?.close()
-                return@withContext null
-            }
-
-            val body = res.body?.string()
-
-            res.body?.close()
-
-            body
+            req.json()
         }
     }
 
     suspend fun register(
         name: String,
-        phone: String,
         email: String,
         dob: Int,
         username: String,
-        password: String
+        password: String,
+        phone: String? = null,
     ): String? {
         val url = "http://$BASE_URL/auth/register"
 
-        val body = FormBody.Builder()
-            .add("name", name)
-            .add("phone", phone)
-            .add("email", email)
-            .add("dob", dob.toString())
-            .add("username", username)
-            .add("password", password)
-            .build()
+        val body = FormBody.Builder().apply {
+            add("name", name)
 
-        val req = Request.Builder().url(url).post(body).build()
+            phone?.let {
+                add("phone", phone)
+            }
+
+            add("email", email)
+            add("dob", dob.toString())
+            add("username", username)
+            add("password", password)
+        }.build()
+
+        val req = Request.Builder().url(url).post(body)
 
         return withContext(Dispatchers.IO) {
-            val res = client.newCall(req).execute()
+            req.json()
+        }
+    }
+
+    private fun Request.Builder.json(): String? {
+        return try {
+            val res = client.newCall(this.build()).execute()
 
             if (res.code != 200) {
                 res.body?.close()
-                return@withContext null
+                return null
             }
 
             val body = res.body?.string()
-
             res.body?.close()
 
             body
+        } catch (e: IOException) {
+            Log.d(TAG, e.stackTraceToString())
+            null
         }
     }
 }

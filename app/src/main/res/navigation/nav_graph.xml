@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/login_fragment">
+
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="io.invest.app.view.fragment.LoginFragment"
+        android:label="Login" />
+    <fragment
+        android:id="@+id/register_fragment"
+        android:name="io.invest.app.view.fragment.RegisterFragment"
+        android:label="Register" />
+</navigation>

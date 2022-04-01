@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlinx-serialization'
+    id 'androidx.navigation.safeargs'
     alias libs.plugins.protobuf
 }
 
@@ -53,6 +54,9 @@ dependencies {
     implementation libs.kotlinx.json
 
     implementation libs.lifecycle.runtime
+
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
 
     implementation libs.hilt.android
     kapt libs.hilt.android.compiler
