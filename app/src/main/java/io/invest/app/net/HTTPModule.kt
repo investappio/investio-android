@@ -33,7 +33,7 @@ class HTTPModule {
                 chain.request().newBuilder()
                     .addHeader(
                         HEADER_AUTHORIZATION,
-                        runBlocking { dataStore.getApiToken().first() })
+                        "Bearer ${runBlocking { dataStore.getApiToken().first() }}")
                     .build()
                     .let(chain::proceed)
             }

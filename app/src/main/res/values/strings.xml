@@ -16,4 +16,6 @@
     <string name="title_login">Login</string>
     <string name="action_login">Login</string>
     <string name="action_log_out">Log out</string>
+    <string name="hint_search_stocks">Search</string>
+    <string name="value_currency">$%1$.2f</string>
 </resources>

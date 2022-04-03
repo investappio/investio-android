@@ -7,3 +7,9 @@ val Json = Json { ignoreUnknownKeys = true}
 
 @Serializable
 data class AuthResponse(val success: Boolean = false, val token: String = "")
+
+@Serializable
+data class Stock(val symbol: String, val name: String)
+
+@Serializable
+data class StockSearchResponse(val success: Boolean, val stocks: List<Stock>)
