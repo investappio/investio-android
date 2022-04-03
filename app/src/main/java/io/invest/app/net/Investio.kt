@@ -33,7 +33,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     suspend fun register(
         name: String,
         email: String,
-        dob: Int,
+        dob: Long,
         username: String,
         password: String,
         phone: String? = null,
