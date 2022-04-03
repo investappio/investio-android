@@ -78,7 +78,7 @@ class RegisterFragment : Fragment() {
                     binding.passwordInput.text.toString()
                 )
 
-                Log.d(TAG, res ?: "")
+                Log.d(TAG, res?.token ?: "")
             }
         }
 
