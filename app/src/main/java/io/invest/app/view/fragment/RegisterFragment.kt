@@ -15,12 +15,12 @@ import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
-import io.invest.app.R
 import io.invest.app.databinding.FragmentRegisterBinding
 import io.invest.app.net.Investio
 import io.invest.app.util.formatDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
@@ -35,6 +35,7 @@ class RegisterFragment : Fragment() {
 
     @Inject
     lateinit var investio: Investio
+
     @Inject
     lateinit var localStore: LocalStore
 
@@ -74,7 +75,7 @@ class RegisterFragment : Fragment() {
         })
 
         binding.loginBtn.setOnClickListener {
-            findNavController().navigate(R.id.login_fragment)
+            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
         }
 
         binding.registerBtn.setOnClickListener {
@@ -90,6 +91,10 @@ class RegisterFragment : Fragment() {
                 res?.let {
                     if (res.success) {
                         localStore.setApiToken(res.token)
+
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToInvestingFragment())
+                        }
                     }
 
                     Log.d(TAG, res.token)

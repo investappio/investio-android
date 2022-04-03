@@ -1,6 +1,7 @@
 package io.invest.app.view
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -11,6 +12,7 @@ import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
@@ -40,17 +42,24 @@ class MainActivity : AppCompatActivity() {
         navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
 
         // Used to know when we are at a "top level" destination
-        appBarConfig = AppBarConfiguration.Builder().build()
+        appBarConfig = AppBarConfiguration.Builder(
+            R.id.investing_fragment
+        ).build()
 
         setupNavigation()
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    if (localStore.getApiToken().first().isNullOrBlank()) {
-                        withContext(Dispatchers.Main) {
-                            navController.navigate(R.id.register_fragment)
-                        }
+                if (localStore.getApiToken().first().isNullOrBlank()) {
+                    withContext(Dispatchers.Main) {
+                        navController.navigate(R.id.register_fragment)
                     }
+                } else {
+                    navController.currentDestination?.let {
+                        navController.popBackStack(it.id, true)
+                        navController.navigate(R.id.investing_fragment)
+                    }
+                }
             }
         }
 
@@ -77,8 +86,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return item.onNavDestinationSelected(navController) ||
+                super.onOptionsItemSelected(item)
+    }
+
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        return navController.navigateUp()
     }
 
     override fun onBackPressed() {

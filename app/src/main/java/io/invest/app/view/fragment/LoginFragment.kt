@@ -12,11 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
-import io.invest.app.R
 import io.invest.app.databinding.FragmentLoginBinding
 import io.invest.app.net.Investio
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private const val TAG = "Login"
@@ -52,7 +52,7 @@ class LoginFragment : Fragment() {
         })
 
         binding.registerBtn.setOnClickListener {
-            findNavController().navigate(R.id.register_fragment)
+            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
         }
 
         binding.loginBtn.setOnClickListener {
@@ -65,6 +65,10 @@ class LoginFragment : Fragment() {
                 res?.let {
                     if (res.success) {
                         localStore.setApiToken(res.token)
+
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToInvestingFragment())
+                        }
                     }
 
                     Log.d(TAG, res.token)

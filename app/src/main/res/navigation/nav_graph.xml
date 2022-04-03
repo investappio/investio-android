@@ -7,9 +7,35 @@
     <fragment
         android:id="@+id/login_fragment"
         android:name="io.invest.app.view.fragment.LoginFragment"
-        android:label="Login" />
+        android:label="@string/title_login">
+        <action
+            android:id="@+id/action_login_fragment_to_register_fragment"
+            app:destination="@id/register_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_login_fragment_to_investing_fragment"
+            app:destination="@id/investing_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/register_fragment"
         android:name="io.invest.app.view.fragment.RegisterFragment"
-        android:label="Register" />
+        android:label="@string/title_register">
+        <action
+            android:id="@+id/action_register_fragment_to_investing_fragment"
+            app:destination="@id/investing_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_register_fragment_to_login_fragment"
+            app:destination="@id/login_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/investing_fragment"
+        android:name="io.invest.app.view.fragment.InvestingFragment"
+        android:label="@string/title_investing" />
 </navigation>
