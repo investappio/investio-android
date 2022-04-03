@@ -22,5 +22,5 @@ android-library = { id = "com.android.library", version.ref = "android" }
 hilt-android = { id = "dagger.hilt.android.plugin", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-navigation-safe-args = { id = "androidx.navigation.safeargs", version.ref = "navigation" }
+navigation-safe-args = { id = "androidx.navigation.safeargs.plugin", version.ref = "navigation" }
 protobuf = { id = "com.google.protobuf", version = "0.8.17" }

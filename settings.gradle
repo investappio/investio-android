@@ -9,7 +9,7 @@ pluginManagement {
             if(requested.id.id.equals('dagger.hilt.android.plugin')) {
                 useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
             }
-            if(requested.id.id.equals('androidx.navigation.safeargs')) {
+            if(requested.id.id.equals('androidx.navigation.safeargs.plugin')) {
                 useModule("androidx.navigation:navigation-safe-args-gradle-plugin:${requested.version}")
             }
         }

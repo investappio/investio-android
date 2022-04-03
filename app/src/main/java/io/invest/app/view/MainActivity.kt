@@ -18,11 +18,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
 import io.invest.app.R
 import io.invest.app.databinding.ActivityMainBinding
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -43,7 +43,10 @@ class MainActivity : AppCompatActivity() {
 
         // Used to know when we are at a "top level" destination
         appBarConfig = AppBarConfiguration.Builder(
-            R.id.investing_fragment
+            R.id.investing_fragment,
+            R.id.profile_fragment,
+            R.id.browse_fragment,
+            R.id.feed_fragment
         ).build()
 
         setupNavigation()
@@ -51,14 +54,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 if (localStore.getApiToken().first().isNullOrBlank()) {
-                    withContext(Dispatchers.Main) {
-                        navController.navigate(R.id.register_fragment)
-                    }
-                } else {
-                    navController.currentDestination?.let {
-                        navController.popBackStack(it.id, true)
-                        navController.navigate(R.id.investing_fragment)
-                    }
+                    clearBackStack()
+                    navController.navigate(R.id.login_fragment)
                 }
             }
         }
@@ -71,6 +68,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(navController, appBarConfig)
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
+
+        // Bottom navigation's tlds should not have back stack entries
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (!appBarConfig.topLevelDestinations.contains(destination.id)) {
                 binding.bottomNavigation.visibility = View.GONE
@@ -83,6 +82,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 binding.toolbar.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun clearBackStack() {
+        navController.currentDestination?.let {
+            navController.popBackStack(it.id, true)
         }
     }
 

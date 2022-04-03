@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/login_fragment">
+    app:startDestination="@id/investing_fragment">
 
     <fragment
         android:id="@+id/login_fragment"
@@ -19,6 +19,7 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/register_fragment"
         android:name="io.invest.app.view.fragment.RegisterFragment"
@@ -34,8 +35,88 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/investing_fragment"
         android:name="io.invest.app.view.fragment.InvestingFragment"
-        android:label="@string/title_investing" />
+        android:label="@string/title_investing">
+        <action
+            android:id="@+id/action_investing_fragment_to_profile_fragment"
+            app:destination="@id/profile_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_investing_fragment_to_browse_fragment"
+            app:destination="@id/browse_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_investing_fragment_to_feed_fragment"
+            app:destination="@id/feed_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/browse_fragment"
+        android:name="io.invest.app.view.fragment.BrowseFragment"
+        android:label="@string/title_browse">
+        <action
+            android:id="@+id/action_browse_fragment_to_profile_fragment"
+            app:destination="@id/profile_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_browse_fragment_to_investing_fragment"
+            app:destination="@id/investing_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_browse_fragment_to_feed_fragment"
+            app:destination="@id/feed_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="io.invest.app.view.fragment.ProfileFragment"
+        android:label="@string/title_profile">
+        <action
+            android:id="@+id/action_profile_fragment_to_investing_fragment"
+            app:destination="@id/investing_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profile_fragment_to_login_fragment"
+            app:destination="@id/login_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_profile_fragment_to_feed_fragment"
+            app:destination="@id/feed_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/feed_fragment"
+        android:name="io.invest.app.view.fragment.FeedFragment"
+        android:label="@string/title_feed">
+        <action
+            android:id="@+id/action_feed_fragment_to_investing_fragment"
+            app:destination="@id/investing_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_feed_fragment_to_login_fragment"
+            app:destination="@id/login_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_feed_fragment_to_profile_fragment"
+            app:destination="@id/profile_fragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

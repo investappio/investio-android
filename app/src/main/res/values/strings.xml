@@ -15,4 +15,5 @@
     <string name="action_register">Register</string>
     <string name="title_login">Login</string>
     <string name="action_login">Login</string>
+    <string name="action_log_out">Log out</string>
 </resources>

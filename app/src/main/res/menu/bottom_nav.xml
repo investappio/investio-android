@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/investing"
-        android:title="@string/title_investing"
-        android:icon="@drawable/ic_candlestick_chart_24" />
+        android:id="@+id/investing_fragment"
+        android:icon="@drawable/ic_candlestick_chart_24"
+        android:title="@string/title_investing" />
     <item
-        android:id="@+id/browse"
-        android:title="@string/title_investing"
-        android:icon="@drawable/ic_search_24" />
+        android:id="@+id/browse_fragment"
+        android:icon="@drawable/ic_search_24"
+        android:title="@string/title_browse" />
     <item
-        android:id="@+id/feed"
-        android:title="@string/title_feed"
-        android:icon="@drawable/ic_global_24" />
+        android:id="@+id/feed_fragment"
+        android:icon="@drawable/ic_global_24"
+        android:title="@string/title_feed" />
     <item
-        android:id="@+id/profile"
-        android:title="@string/title_investing"
-        android:icon="@drawable/ic_person_24" />
+        android:id="@+id/profile_fragment"
+        android:icon="@drawable/ic_person_24"
+        android:title="@string/title_profile" />
 </menu>
