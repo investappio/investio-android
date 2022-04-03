@@ -9,10 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import io.invest.app.LocalStore
+import io.invest.app.R
 import io.invest.app.databinding.FragmentRegisterBinding
 import io.invest.app.net.Investio
 import io.invest.app.util.formatDate
@@ -32,6 +35,8 @@ class RegisterFragment : Fragment() {
 
     @Inject
     lateinit var investio: Investio
+    @Inject
+    lateinit var localStore: LocalStore
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,6 +73,10 @@ class RegisterFragment : Fragment() {
                 source.toString().lowercase()
         })
 
+        binding.loginBtn.setOnClickListener {
+            findNavController().navigate(R.id.login_fragment)
+        }
+
         binding.registerBtn.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 val res = investio.register(
@@ -78,7 +87,13 @@ class RegisterFragment : Fragment() {
                     binding.passwordInput.text.toString()
                 )
 
-                Log.d(TAG, res?.token ?: "")
+                res?.let {
+                    if (res.success) {
+                        localStore.setApiToken(res.token)
+                    }
+
+                    Log.d(TAG, res.token)
+                }
             }
         }
 

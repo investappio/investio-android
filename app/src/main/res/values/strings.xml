@@ -7,6 +7,7 @@
     <string name="title_profile">Profile</string>
     <string name="label_name">Name</string>
     <string name="label_username">Username</string>
+    <string name="label_username_or_email">Username or email</string>
     <string name="label_email">E-mail</string>
     <string name="label_dob">Birthday</string>
     <string name="label_password">Password</string>

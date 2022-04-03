@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navGraph: NavGraph
 
     @Inject
-    lateinit var dataStore: LocalStore
+    lateinit var localStore: LocalStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    if (dataStore.getApiToken().first().isNullOrBlank()) {
+                    if (localStore.getApiToken().first().isNullOrBlank()) {
                         withContext(Dispatchers.Main) {
                             navController.navigate(R.id.register_fragment)
                         }
