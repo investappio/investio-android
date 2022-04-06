@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import io.invest.app.R
 import io.invest.app.databinding.ListItemStockSearchBinding
 import io.invest.app.net.Investio
 import io.invest.app.util.Stock
@@ -31,12 +30,20 @@ class StockSearchAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val stock = getItem(position)
-        val binding = ListItemStockSearchBinding.inflate(inflater, parent, false)
 
-        binding.stockNameView.text = stock.name
-        binding.stockSymbolView.text = stock.symbol
+        val viewHolder: ViewHolder = if (convertView != null) {
+            val holder = convertView.tag as ViewHolder
+            holder.binding.stockNameView.text = stock.name
+            holder.binding.stockSymbolView.text = stock.symbol
+            holder
+        } else {
+            val binding = ListItemStockSearchBinding.inflate(inflater, parent, false)
+            val holder = ViewHolder(binding)
+            binding.root.tag = holder
+            holder
+        }
 
-        return binding.root
+        return viewHolder.binding.root
     }
 
     override fun getFilter(): Filter {
@@ -66,4 +73,6 @@ class StockSearchAdapter(
 
         return filter
     }
+
+    inner class ViewHolder(val binding: ListItemStockSearchBinding)
 }
