@@ -79,7 +79,7 @@ class RegisterFragment : Fragment() {
         }
 
         binding.registerBtn.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch {
                 val res = investio.register(
                     binding.nameInput.text.toString(),
                     binding.emailInput.text.toString(),
@@ -90,11 +90,11 @@ class RegisterFragment : Fragment() {
 
                 res?.let {
                     if (res.success) {
-                        localStore.setApiToken(res.token)
-
-                        withContext(Dispatchers.Main) {
-                            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToInvestingFragment())
+                        withContext(Dispatchers.IO) {
+                            localStore.setApiToken(res.token)
                         }
+
+                        findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToInvestingFragment())
                     }
 
                     Log.d(TAG, res.token)

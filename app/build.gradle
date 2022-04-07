@@ -51,9 +51,12 @@ dependencies {
 
     implementation libs.okhttp
 
+    implementation libs.kotlinx.datetime
     implementation libs.kotlinx.json
 
     implementation libs.lifecycle.runtime
+
+    implementation libs.mp.android.chart
 
     implementation libs.navigation.fragment
     implementation libs.navigation.ui

@@ -3,6 +3,7 @@ package io.invest.app.net
 import android.util.Log
 import io.invest.app.util.AuthResponse
 import io.invest.app.util.Json
+import io.invest.app.util.StockPriceResponse
 import io.invest.app.util.StockSearchResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -77,14 +78,15 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun getPrices(query: String) {
-        val url = "$BASE_URL/stocks/price".toHttpUrl().newBuilder().addQueryParameter("query", query)
-            .build()
+    suspend fun getPrices(query: String): StockPriceResponse? {
+        val url =
+            "$BASE_URL/stocks/price".toHttpUrl().newBuilder().addQueryParameter("query", query)
+                .build()
 
         val req = Request.Builder().url(url).get()
 
-        withContext(Dispatchers.IO) {
-            req.json()?.let { Log.d(TAG, it) }
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<StockPriceResponse>(it) }
         }
     }
 
