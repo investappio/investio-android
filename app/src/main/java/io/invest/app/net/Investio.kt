@@ -77,6 +77,17 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
+    suspend fun getPrices(query: String) {
+        val url = "$BASE_URL/stocks/price".toHttpUrl().newBuilder().addQueryParameter("query", query)
+            .build()
+
+        val req = Request.Builder().url(url).get()
+
+        withContext(Dispatchers.IO) {
+            req.json()?.let { Log.d(TAG, it) }
+        }
+    }
+
     private fun Request.Builder.json(): String? {
         return try {
             val res = client.newCall(this.build()).execute()
