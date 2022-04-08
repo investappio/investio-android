@@ -1,5 +1,5 @@
 [versions]
-android = "7.1.2"
+android = "7.1.3"
 hilt = "2.41"
 kotlin = "1.6.10"
 lifecycle = "2.4.1"
