@@ -4,6 +4,7 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,8 @@ import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.google.android.material.color.MaterialColors
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
@@ -80,6 +83,39 @@ class StockDetailFragment : Fragment() {
             description.isEnabled = false
             isDoubleTapToZoomEnabled = false
             legend.isEnabled = false
+            isHighlightPerTapEnabled = false
+
+            onChartGestureListener = object : OnChartGestureListener {
+                override fun onChartGestureStart(
+                    me: MotionEvent?,
+                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                ) {
+                }
+
+                override fun onChartGestureEnd(
+                    me: MotionEvent?,
+                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                ) {
+                }
+
+                override fun onChartLongPressed(me: MotionEvent?) {}
+
+                override fun onChartDoubleTapped(me: MotionEvent?) {}
+
+                override fun onChartSingleTapped(me: MotionEvent?) {}
+
+                override fun onChartFling(
+                    me1: MotionEvent?,
+                    me2: MotionEvent?,
+                    velocityX: Float,
+                    velocityY: Float
+                ) {
+                }
+
+                override fun onChartScale(me: MotionEvent?, scaleX: Float, scaleY: Float) {}
+
+                override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
+            }
         }
 
         lifecycleScope.launch {
@@ -94,38 +130,33 @@ class StockDetailFragment : Fragment() {
                         price.open,
                         price.close
                     )
-                } as MutableList
+                }
 
-//                if (entries.size < 5) {
-//                    entries.addAll(
-//                        (entries.size..4).map { index ->
-//                            CandleEntry(index.toFloat(), 0f, 0f, 0f, 0f)
-//                        })
-//                }
+                val dataSet = CandleDataSet(entries, "").apply {
+                    setDrawHorizontalHighlightIndicator(false)
 
-                val dataSet = CandleDataSet(entries, "")
+                    decreasingColor = MaterialColors.getColor(
+                        binding.chart,
+                        com.google.android.material.R.attr.colorError
+                    )
 
-                dataSet.decreasingColor = MaterialColors.getColor(
-                    binding.chart,
-                    com.google.android.material.R.attr.colorError
-                )
+                    increasingColor =
+                        MaterialColors.getColor(binding.chart, R.attr.colorSuccess)
 
-                dataSet.neutralColor = MaterialColors.getColor(
-                    binding.chart,
-                    com.google.android.material.R.attr.colorOnSurface
-                )
+                    increasingPaintStyle = Paint.Style.FILL
 
-                dataSet.increasingColor =
-                    MaterialColors.getColor(binding.chart, R.attr.colorSuccess)
+                    neutralColor = MaterialColors.getColor(
+                        binding.chart,
+                        com.google.android.material.R.attr.colorOnSurface
+                    )
 
-                dataSet.increasingPaintStyle = Paint.Style.FILL
+                    shadowColor = neutralColor
 
-                dataSet.shadowColor = dataSet.neutralColor
+                    setDrawValues(false)
+                }
 
                 binding.chart.data = CandleData(dataSet)
                 binding.chart.fitScreen()
-                binding.chart.moveViewToX(5f)
-                binding.chart.invalidate()
             }
 
             Log.d(TAG, res?.prices.toString())
