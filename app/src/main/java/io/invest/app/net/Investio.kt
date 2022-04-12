@@ -4,7 +4,7 @@ import android.util.Log
 import io.invest.app.util.AuthResponse
 import io.invest.app.util.Json
 import io.invest.app.util.StockPriceResponse
-import io.invest.app.util.StockSearchResponse
+import io.invest.app.util.StockListResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -66,7 +66,19 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun searchStocks(query: String): StockSearchResponse? {
+    suspend fun topGainStocks(count: Int): StockListResponse? {
+        val url =
+            "$BASE_URL/stocks/gainers".toHttpUrl().newBuilder().addQueryParameter("count", count.toString())
+                .build()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<StockListResponse>(it) }
+        }
+    }
+
+    suspend fun searchStocks(query: String): StockListResponse? {
         val url =
             "$BASE_URL/stocks/search".toHttpUrl().newBuilder().addQueryParameter("query", query)
                 .build()
@@ -74,7 +86,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockSearchResponse>(it) }
+            req.json()?.let { Json.decodeFromString<StockListResponse>(it) }
         }
     }
 

@@ -13,7 +13,7 @@ data class AuthResponse(val success: Boolean = false, val token: String = "")
 data class Stock(val symbol: String, val name: String)
 
 @Serializable
-data class StockSearchResponse(val success: Boolean, val stocks: List<Stock>)
+data class StockListResponse(val success: Boolean, val stocks: List<Stock>)
 
 @Serializable
 data class StockPrice(val symbol: String, val close: Float, val high: Float, val low: Float, val open: Float, val volume: Int, val date: Instant, val updated: Instant)
