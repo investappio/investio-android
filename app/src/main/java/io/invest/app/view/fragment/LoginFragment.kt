@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.loginBtn.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch {
                 val res = investio.login(
                     binding.loginInput.text.toString(),
                     binding.passwordInput.text.toString()
@@ -64,11 +64,11 @@ class LoginFragment : Fragment() {
 
                 res?.let {
                     if (res.success) {
-                        localStore.setApiToken(res.token)
-
-                        withContext(Dispatchers.Main) {
-                            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToInvestingFragment())
+                        withContext(Dispatchers.IO) {
+                            localStore.setApiToken(res.token)
                         }
+
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToInvestingFragment())
                     }
 
                     Log.d(TAG, res.token)

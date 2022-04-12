@@ -29,9 +29,8 @@ class StockSearchAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val stock = getItem(position)
-
         val viewHolder: ViewHolder = if (convertView != null) {
+            val stock = getItem(position)
             val holder = convertView.tag as ViewHolder
             holder.binding.stockNameView.text = stock.name
             holder.binding.stockSymbolView.text = stock.symbol
