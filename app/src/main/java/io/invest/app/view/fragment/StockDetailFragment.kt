@@ -44,6 +44,58 @@ class StockDetailFragment : Fragment() {
         _binding = FragmentStockDetailBinding.inflate(inflater)
         binding.textView.text = args.symbol
 
+        setupChart()
+
+        lifecycleScope.launch {
+            val res = investio.getPrices(args.symbol)
+
+            res?.prices?.let {
+                val entries = it.mapIndexed { index, price ->
+                    CandleEntry(
+                        index.toFloat(),
+                        price.high,
+                        price.low,
+                        price.open,
+                        price.close
+                    )
+                }
+
+                val dataSet = CandleDataSet(entries, "").apply {
+                    setDrawHorizontalHighlightIndicator(false)
+
+                    decreasingColor = MaterialColors.getColor(
+                        binding.chart,
+                        com.google.android.material.R.attr.colorError
+                    )
+
+                    increasingColor =
+                        MaterialColors.getColor(binding.chart, R.attr.colorSuccess)
+
+                    increasingPaintStyle = Paint.Style.FILL
+
+                    neutralColor = MaterialColors.getColor(
+                        binding.chart,
+                        com.google.android.material.R.attr.colorOnSurface
+                    )
+
+                    shadowColor = neutralColor
+
+                    setDrawValues(false)
+                }
+
+                binding.chart.data = CandleData(dataSet)
+                binding.chart.xAxis.axisMaximum = maxOf(dataSet.entryCount.toFloat(), 10f)
+                binding.chart.axisLeft.axisMinimum = dataSet.yMin - 1
+                binding.chart.axisLeft.axisMaximum = dataSet.yMax + 1
+                binding.chart.fitScreen()
+            }
+        }
+
+        (activity as AppCompatActivity).supportActionBar?.title = args.symbol
+        return binding.root
+    }
+
+    private fun setupChart() {
         binding.chart.apply {
 
             axisLeft.apply {
@@ -117,53 +169,6 @@ class StockDetailFragment : Fragment() {
                 override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
             }
         }
-
-        lifecycleScope.launch {
-            val res = investio.getPrices(args.symbol)
-
-            res?.prices?.let {
-                val entries = it.mapIndexed { index, price ->
-                    CandleEntry(
-                        index.toFloat(),
-                        price.high,
-                        price.low,
-                        price.open,
-                        price.close
-                    )
-                }
-
-                val dataSet = CandleDataSet(entries, "").apply {
-                    setDrawHorizontalHighlightIndicator(false)
-
-                    decreasingColor = MaterialColors.getColor(
-                        binding.chart,
-                        com.google.android.material.R.attr.colorError
-                    )
-
-                    increasingColor =
-                        MaterialColors.getColor(binding.chart, R.attr.colorSuccess)
-
-                    increasingPaintStyle = Paint.Style.FILL
-
-                    neutralColor = MaterialColors.getColor(
-                        binding.chart,
-                        com.google.android.material.R.attr.colorOnSurface
-                    )
-
-                    shadowColor = neutralColor
-
-                    setDrawValues(false)
-                }
-
-                binding.chart.data = CandleData(dataSet)
-                binding.chart.fitScreen()
-            }
-
-            Log.d(TAG, res?.prices.toString())
-        }
-
-        (activity as AppCompatActivity).supportActionBar?.title = args.symbol
-        return binding.root
     }
 
     override fun onDestroyView() {
