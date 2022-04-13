@@ -136,6 +136,7 @@ class StockDetailFragment : Fragment() {
             isDoubleTapToZoomEnabled = false
             legend.isEnabled = false
             isHighlightPerTapEnabled = false
+            setDrawBorders(false)
 
             onChartGestureListener = object : OnChartGestureListener {
                 override fun onChartGestureStart(

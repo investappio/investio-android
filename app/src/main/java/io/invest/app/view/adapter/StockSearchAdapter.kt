@@ -21,7 +21,7 @@ class StockSearchAdapter(
     private val inflater = LayoutInflater.from(context)
 
     override fun getCount(): Int {
-        return results.size
+        return results.count()
     }
 
     override fun getItem(index: Int): Stock {
@@ -51,22 +51,18 @@ class StockSearchAdapter(
                 val filterResults = FilterResults()
 
                 runBlocking {
-                    results =
-                        investio.searchStocks(query.toString())?.stocks?.take(10) ?: emptyList()
-
-                    filterResults.values = results
-                    filterResults.count = results.size
+                    (investio.searchStocks(query.toString())?.stocks?.take(10) ?: emptyList()).let {
+                        filterResults.values = it
+                        filterResults.count = it.size
+                    }
                 }
 
                 return filterResults
             }
 
-            override fun publishResults(query: CharSequence?, filterResults: FilterResults?) {
-                if (results.isNotEmpty()) {
-                    notifyDataSetChanged()
-                } else {
-                    notifyDataSetInvalidated()
-                }
+            override fun publishResults(query: CharSequence?, filterResults: FilterResults) {
+                results = filterResults.values as List<Stock>
+                notifyDataSetChanged()
             }
         }
 
