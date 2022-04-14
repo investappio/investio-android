@@ -10,6 +10,7 @@ import android.widget.Filterable
 import io.invest.app.databinding.ListItemStockSearchBinding
 import io.invest.app.net.Investio
 import io.invest.app.util.Stock
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 class StockSearchAdapter(
@@ -29,20 +30,16 @@ class StockSearchAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val viewHolder: ViewHolder = if (convertView != null) {
-            val stock = getItem(position)
-            val holder = convertView.tag as ViewHolder
-            holder.binding.stockNameView.text = stock.name
-            holder.binding.stockSymbolView.text = stock.symbol
-            holder
+        val binding = if (convertView == null) {
+            ListItemStockSearchBinding.inflate(inflater, parent, false)
         } else {
-            val binding = ListItemStockSearchBinding.inflate(inflater, parent, false)
-            val holder = ViewHolder(binding)
-            binding.root.tag = holder
-            holder
+            ListItemStockSearchBinding.bind(convertView)
         }
 
-        return viewHolder.binding.root
+        val stock = getItem(position)
+        binding.stockNameView.text = stock.name
+        binding.stockSymbolView.text = stock.symbol.uppercase()
+        return binding.root
     }
 
     override fun getFilter(): Filter {
@@ -50,7 +47,7 @@ class StockSearchAdapter(
             override fun performFiltering(query: CharSequence?): FilterResults {
                 val filterResults = FilterResults()
 
-                runBlocking {
+                runBlocking(Dispatchers.IO) {
                     (investio.searchStocks(query.toString())?.stocks?.take(10) ?: emptyList()).let {
                         filterResults.values = it
                         filterResults.count = it.size
@@ -60,14 +57,16 @@ class StockSearchAdapter(
                 return filterResults
             }
 
-            override fun publishResults(query: CharSequence?, filterResults: FilterResults) {
-                results = filterResults.values as List<Stock>
-                notifyDataSetChanged()
+            override fun publishResults(query: CharSequence?, filterResults: FilterResults?) {
+                if (filterResults != null && filterResults.count > 0) {
+                    results = filterResults.values as List<Stock>
+                    notifyDataSetChanged()
+                } else {
+                    notifyDataSetInvalidated()
+                }
             }
         }
 
         return filter
     }
-
-    inner class ViewHolder(val binding: ListItemStockSearchBinding)
 }
