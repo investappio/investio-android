@@ -1,10 +1,7 @@
 package io.invest.app.net
 
 import android.util.Log
-import io.invest.app.util.AuthResponse
-import io.invest.app.util.Json
-import io.invest.app.util.StockListResponse
-import io.invest.app.util.StockPriceResponse
+import io.invest.app.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -114,6 +111,40 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
         return withContext(Dispatchers.IO) {
             req.json()?.let { Json.decodeFromString<StockPriceResponse>(it) }
+        }
+    }
+
+    suspend fun getPortfolio(): PortfolioResponse? {
+        val url = "$BASE_URL/user/portfolio".toHttpUrl()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<PortfolioResponse>(it) }
+        }
+    }
+
+    suspend fun buyStock(stock: String, amount: Float): PortfolioResponse? {
+        val url = "$BASE_URL/stocks/${stock}/buy".toHttpUrl()
+
+        val body = FormBody.Builder().add("quantity", amount.toString()).build()
+
+        val req = Request.Builder().url(url).post(body)
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<PortfolioResponse>(it) }
+        }
+    }
+
+    suspend fun sellStock(stock: String, amount: Float): PortfolioResponse? {
+        val url = "$BASE_URL/stocks/${stock}/sell".toHttpUrl()
+
+        val body = FormBody.Builder().add("quantity", amount.toString()).build()
+
+        val req = Request.Builder().url(url).post(body)
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<PortfolioResponse>(it) }
         }
     }
 
