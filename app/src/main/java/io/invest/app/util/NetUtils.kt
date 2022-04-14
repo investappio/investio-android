@@ -13,7 +13,7 @@ data class AuthResponse(val success: Boolean = false, val token: String = "")
 data class Stock(val symbol: String, val name: String)
 
 @Serializable
-data class Asset(val quantity: Float)
+data class Asset(val quantity: Float, val stock: Stock)
 
 @Serializable
 data class Portfolio(val balance: Float, val assets: Map<String, Asset>)
