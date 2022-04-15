@@ -48,9 +48,14 @@ class StockDetailFragment : Fragment() {
 
         lifecycleScope.launch {
             val res = investio.getPrices(args.symbol)
+            var min = Float.MAX_VALUE
+            var max = Float.MIN_VALUE
 
             res?.prices?.let {
                 val entries = it.mapIndexed { index, price ->
+                    max = maxOf(max, price.high, price.open, price.close)
+                    min = minOf(min, price.low, price.open, price.close)
+
                     CandleEntry(
                         index.toFloat(),
                         price.high,
@@ -85,9 +90,9 @@ class StockDetailFragment : Fragment() {
 
                 binding.chart.data = CandleData(dataSet)
                 binding.chart.xAxis.axisMaximum = maxOf(dataSet.entryCount.toFloat(), 10f)
-                binding.chart.axisLeft.axisMinimum = dataSet.yMin - 1
-                binding.chart.axisLeft.axisMaximum = dataSet.yMax + 1
-                binding.chart.fitScreen()
+                binding.chart.axisLeft.axisMinimum = min - 1
+                binding.chart.axisLeft.axisMaximum = max + 1
+                binding.chart.invalidate()
             }
         }
 
