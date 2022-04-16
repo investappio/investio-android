@@ -104,20 +104,10 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
     suspend fun getPriceHistory(
         stock: String,
-        date: Instant = Clock.System.now(),
-        days: Int = 5,
-        weeks: Int = 0,
-        months: Int = 0,
-        years: Int = 0
+        timeRange: TimeRange = TimeRange.WEEKS,
     ): PriceHistoryResponse? {
         val url =
-            "$BASE_URL/stocks/${stock}/price/historical".toHttpUrl().newBuilder()
-                .addQueryParameter("date", date.toEpochMilliseconds().toString())
-                .addQueryParameter("days", days.toString())
-                .addQueryParameter("weeks", weeks.toString())
-                .addQueryParameter("months", months.toString())
-                .addQueryParameter("years", years.toString())
-                .build()
+            "$BASE_URL/stocks/${stock}/price/historical/${timeRange.range}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/investing_fragment">
+    app:startDestination="@id/portfolio_fragment">
 
     <fragment
         android:id="@+id/login_fragment"
@@ -17,7 +17,7 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_login_fragment_to_investing_fragment"
-            app:destination="@id/investing_fragment"
+            app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
@@ -29,7 +29,7 @@
         tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_register_fragment_to_investing_fragment"
-            app:destination="@id/investing_fragment"
+            app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
@@ -40,9 +40,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/investing_fragment"
-        android:name="io.invest.app.view.fragment.InvestingFragment"
-        android:label="@string/title_investing">
+        android:id="@+id/portfolio_fragment"
+        android:name="io.invest.app.view.fragment.PortfolioFragment"
+        android:label="@string/title_portfolio">
         <action
             android:id="@+id/action_investing_fragment_to_profile_fragment"
             app:destination="@id/profile_fragment"
@@ -72,7 +72,7 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_browse_fragment_to_investing_fragment"
-            app:destination="@id/investing_fragment"
+            app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
@@ -92,7 +92,7 @@
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profile_fragment_to_investing_fragment"
-            app:destination="@id/investing_fragment"
+            app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
@@ -113,7 +113,7 @@
         android:label="@string/title_feed">
         <action
             android:id="@+id/action_feed_fragment_to_investing_fragment"
-            app:destination="@id/investing_fragment"
+            app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action

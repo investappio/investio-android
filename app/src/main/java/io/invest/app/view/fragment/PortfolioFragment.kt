@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
-import io.invest.app.databinding.FragmentInvestingBinding
+import io.invest.app.databinding.FragmentPortfolioBinding
 import io.invest.app.view.viewmodel.PortfolioViewModel
+import java.math.BigDecimal
+import java.math.RoundingMode
 
-private const val TAG = "Investing"
+private const val TAG = "Portfolio"
 
 @AndroidEntryPoint
-class InvestingFragment : Fragment() {
-    private var _binding: FragmentInvestingBinding? = null
+class PortfolioFragment : Fragment() {
+    private var _binding: FragmentPortfolioBinding? = null
     private val binding get() = _binding!!
 
     private val portfolioViewModel: PortfolioViewModel by viewModels()
@@ -25,12 +28,20 @@ class InvestingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentInvestingBinding.inflate(inflater, container, false)
+        _binding = FragmentPortfolioBinding.inflate(inflater, container, false)
+
+        binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
 
         portfolioViewModel.portfolio.observe(viewLifecycleOwner) {
-            // TODO: Update UI with portfolio information
+            binding.investingTicker.text = "\$${
+                BigDecimal(it.value.toDouble()).minus(BigDecimal(it.cash.toDouble()))
+                    .setScale(2, RoundingMode.HALF_UP).toPlainString()
+            }"
             Log.d(TAG, it.toString())
         }
+
+        portfolioViewModel.getPortfolio()
+
         return binding.root
     }
 

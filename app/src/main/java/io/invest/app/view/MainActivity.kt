@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         // Used to know when we are at a "top level" destination
         appBarConfig = AppBarConfiguration.Builder(
-            R.id.investing_fragment,
+            R.id.portfolio_fragment,
             R.id.profile_fragment,
             R.id.browse_fragment,
             R.id.feed_fragment
