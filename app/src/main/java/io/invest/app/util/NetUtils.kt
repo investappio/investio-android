@@ -10,7 +10,7 @@ val Json = Json { ignoreUnknownKeys = true }
 data class AuthResponse(val success: Boolean = false, val token: String = "")
 
 @Serializable
-data class Stock(val symbol: String, val name: String, val price: StockPrice)
+data class Stock(val symbol: String, val name: String, val price: StockPrice? = null)
 
 @Serializable
 data class Asset(val quantity: Float, val stock: Stock)
