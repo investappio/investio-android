@@ -90,16 +90,28 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun getPrices(
+    suspend fun getPrice(
+        stock: String
+    ): PriceResponse? {
+        val url = "$BASE_URL/stocks/${stock}/price".toHttpUrl()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<PriceResponse>(it) }
+        }
+    }
+
+    suspend fun getPriceHistory(
         stock: String,
         date: Instant = Clock.System.now(),
         days: Int = 5,
         weeks: Int = 0,
         months: Int = 0,
         years: Int = 0
-    ): StockPriceResponse? {
+    ): PriceHistoryResponse? {
         val url =
-            "$BASE_URL/stocks/${stock}/price".toHttpUrl().newBuilder()
+            "$BASE_URL/stocks/${stock}/price/historical".toHttpUrl().newBuilder()
                 .addQueryParameter("date", date.toEpochMilliseconds().toString())
                 .addQueryParameter("days", days.toString())
                 .addQueryParameter("weeks", weeks.toString())
@@ -110,7 +122,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockPriceResponse>(it) }
+            req.json()?.let { Json.decodeFromString<PriceHistoryResponse>(it) }
         }
     }
 
