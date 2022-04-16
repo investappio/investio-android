@@ -38,7 +38,7 @@ class StockSearchAdapter(
 
         val stock = getItem(position)
         binding.stockNameView.text = stock.name
-        binding.stockSymbolView.text = stock.symbol.uppercase()
+        binding.stockSymbolView.text = stock.symbol
         return binding.root
     }
 

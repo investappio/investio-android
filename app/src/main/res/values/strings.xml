@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Invest.io</string>
 
-    <string name="title_investing">Investing</string>
+    <string name="title_portfolio">Portfolio</string>
     <string name="title_browse">Browse</string>
     <string name="title_feed">Feed</string>
     <string name="title_profile">Profile</string>
@@ -9,6 +9,7 @@
     <string name="label_username">Username</string>
     <string name="label_username_or_email">Username or email</string>
     <string name="label_email">E-mail</string>
+    <string name="label_investing">Investing</string>
     <string name="label_dob">Birthday</string>
     <string name="label_password">Password</string>
     <string name="title_register">Register</string>

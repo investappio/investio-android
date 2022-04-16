@@ -4,8 +4,6 @@ import android.util.Log
 import io.invest.app.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.serialization.decodeFromString
 import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -90,27 +88,29 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun getPrices(
-        stock: String,
-        date: Instant = Clock.System.now(),
-        days: Int = 5,
-        weeks: Int = 0,
-        months: Int = 0,
-        years: Int = 0
-    ): StockPriceResponse? {
-        val url =
-            "$BASE_URL/stocks/${stock}/price".toHttpUrl().newBuilder()
-                .addQueryParameter("date", date.toEpochMilliseconds().toString())
-                .addQueryParameter("days", days.toString())
-                .addQueryParameter("weeks", weeks.toString())
-                .addQueryParameter("months", months.toString())
-                .addQueryParameter("years", years.toString())
-                .build()
+    suspend fun getPrice(
+        stock: String
+    ): PriceResponse? {
+        val url = "$BASE_URL/stocks/${stock}/price".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockPriceResponse>(it) }
+            req.json()?.let { Json.decodeFromString<PriceResponse>(it) }
+        }
+    }
+
+    suspend fun getPriceHistory(
+        stock: String,
+        timeRange: TimeRange = TimeRange.WEEKS,
+    ): PriceHistoryResponse? {
+        val url =
+            "$BASE_URL/stocks/${stock}/price/historical/${timeRange.range}".toHttpUrl()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<PriceHistoryResponse>(it) }
         }
     }
 
