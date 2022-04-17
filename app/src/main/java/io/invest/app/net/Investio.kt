@@ -125,7 +125,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     }
 
     suspend fun getPortfolioHistory(timeRange: TimeRange = TimeRange.WEEKS,): PortfolioHistoryResponse? {
-        val url = "$BASE_URL/portfolio/historical/${timeRange.range}"
+        val url = "$BASE_URL/user/portfolio/historical/${timeRange.range}"
 
         val req = Request.Builder().url(url).get()
 

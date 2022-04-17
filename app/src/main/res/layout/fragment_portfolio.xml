@@ -32,10 +32,19 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintDimensionRatio="3:2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/investing_ticker" />
+        app:layout_constraintTop_toBottomOf="@id/investing_ticker"
+        app:spark_scrubEnabled="true" />
+
+    <TextView
+        android:id="@+id/scrub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spark_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
