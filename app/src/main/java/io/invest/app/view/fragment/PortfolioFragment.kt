@@ -69,6 +69,7 @@ class PortfolioFragment : Fragment() {
                 }
 
                 binding.investingTicker.text = "\$${investing.toPlainString()}"
+                binding.scrub.text = ""
             }
         }
 
