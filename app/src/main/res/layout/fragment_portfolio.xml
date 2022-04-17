@@ -27,4 +27,15 @@
         app:layout_constraintTop_toBottomOf="@id/investing_label"
         tools:text="$512.20" />
 
+    <com.robinhood.spark.SparkView
+        android:id="@+id/spark_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintDimensionRatio="2:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/investing_ticker" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

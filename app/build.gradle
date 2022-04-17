@@ -55,6 +55,7 @@ dependencies {
     implementation libs.kotlinx.json
 
     implementation libs.lifecycle.runtime
+    implementation libs.lifecycle.livedata.ktx
 
     implementation libs.mp.android.chart
 
@@ -67,6 +68,7 @@ dependencies {
     implementation libs.datastore
     implementation libs.protobuf.javalite
 
+    implementation libs.robinhood.spark
     implementation libs.robinhood.ticker
 }
 

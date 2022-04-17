@@ -124,6 +124,16 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
+    suspend fun getPortfolioHistory(timeRange: TimeRange = TimeRange.WEEKS,): PortfolioHistoryResponse? {
+        val url = "$BASE_URL/portfolio/historical/${timeRange.range}"
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<PortfolioHistoryResponse>(it) }
+        }
+    }
+
     suspend fun buyStock(stock: String, amount: Float): PortfolioResponse? {
         val url = "$BASE_URL/stocks/${stock}/buy".toHttpUrl()
 
