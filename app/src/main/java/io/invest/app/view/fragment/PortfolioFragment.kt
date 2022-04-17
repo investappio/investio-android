@@ -1,7 +1,6 @@
 package io.invest.app.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +11,19 @@ import com.robinhood.spark.SparkAdapter
 import com.robinhood.spark.SparkView
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
+import io.invest.app.R
 import io.invest.app.databinding.FragmentPortfolioBinding
 import io.invest.app.util.PortfolioHistory
+import io.invest.app.util.TimeRange
+import io.invest.app.util.format
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 private const val TAG = "Portfolio"
 
@@ -29,6 +35,8 @@ class PortfolioFragment : Fragment() {
     private val portfolioViewModel: PortfolioViewModel by viewModels()
     private var investing = BigDecimal(0)
     private val history = mutableListOf<PortfolioHistory>()
+
+    private val yearDateFormat = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.getDefault())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,39 +51,56 @@ class PortfolioFragment : Fragment() {
             investing = it.value.toBigDecimal().minus(it.cash.toBigDecimal())
                 .setScale(2, RoundingMode.HALF_UP)
             binding.investingTicker.text = "\$${investing.toPlainString()}"
+        }
 
-            Log.d(TAG, it.toString())
+        binding.sparkView.adapter = object : SparkAdapter() {
+            override fun getCount(): Int = history.size
+
+            override fun getItem(index: Int) = history.getOrNull(index)
+
+            override fun getY(index: Int): Float {
+                return getItem(index)?.value ?: 0f
+            }
+        }
+
+        binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
+            (history as PortfolioHistory?)?.let {
+                binding.historicalDate.text = Instant.parse(history.date).format(yearDateFormat)
+                binding.investingTicker.text = "\$${history.value}"
+                return@OnScrubListener
+            }
+
+            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
+            binding.investingTicker.text = "\$${investing.toPlainString()}"
         }
 
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
             history.clear()
             history.addAll(it)
+            binding.sparkView.adapter.notifyDataSetChanged()
+            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
+        }
 
-            binding.sparkView.adapter = object : SparkAdapter() {
-                override fun getCount(): Int = history.size
-
-                override fun getItem(index: Int) = history[index]
-
-                override fun getY(index: Int): Float {
-                    return getItem(index).value
+        binding.historyToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                lifecycleScope.launch {
+                    portfolioViewModel.getPortfolioHistory(
+                        when (checkedId) {
+                            R.id.month_history ->
+                                TimeRange.MONTHS
+                            R.id.year_history ->
+                                TimeRange.YEAR
+                            else ->
+                                TimeRange.WEEKS
+                        }
+                    )
                 }
-            }
-
-            binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
-                (history as PortfolioHistory?)?.let {
-                    binding.scrub.text = history.date
-                    binding.investingTicker.text = "\$${history.value}"
-                    return@OnScrubListener
-                }
-
-                binding.investingTicker.text = "\$${investing.toPlainString()}"
-                binding.scrub.text = ""
             }
         }
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenStarted {
             portfolioViewModel.getPortfolio()
-            portfolioViewModel.getPortfolioHistory()
+            portfolioViewModel.getPortfolioHistory(TimeRange.WEEKS)
         }
 
         return binding.root

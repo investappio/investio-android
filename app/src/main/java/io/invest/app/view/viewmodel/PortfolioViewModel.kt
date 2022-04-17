@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.invest.app.net.Investio
 import io.invest.app.util.Portfolio
 import io.invest.app.util.PortfolioHistory
+import io.invest.app.util.TimeRange
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,13 +19,13 @@ class PortfolioViewModel @Inject constructor(private val investio: Investio) : V
 
     suspend fun getPortfolio() {
         investio.getPortfolio()?.portfolio?.let {
-            _portfolio.postValue(it)
+            _portfolio.value = it
         }
     }
 
-    suspend fun getPortfolioHistory() {
-        investio.getPortfolioHistory()?.history?.let {
-            _portfolioHistory.postValue(it)
+    suspend fun getPortfolioHistory(timeRange: TimeRange) {
+        investio.getPortfolioHistory(timeRange)?.history?.let {
+            _portfolioHistory.value = it
         }
     }
 }

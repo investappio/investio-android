@@ -6,12 +6,6 @@ import kotlinx.serialization.json.Json
 
 val Json = Json { ignoreUnknownKeys = true }
 
-enum class TimeRange(val range: String) {
-    WEEKS("2w"),
-    MONTHS("3m"),
-    YEAR("1y")
-}
-
 @Serializable
 data class AuthResponse(val success: Boolean = false, val token: String = "")
 
