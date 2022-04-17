@@ -16,7 +16,6 @@ import io.invest.app.databinding.FragmentPortfolioBinding
 import io.invest.app.util.PortfolioHistory
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -41,11 +40,9 @@ class PortfolioFragment : Fragment() {
         binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
 
         portfolioViewModel.portfolio.observe(viewLifecycleOwner) {
-            investing = it.value.toBigDecimal()
-            binding.investingTicker.text = "\$${
-                it.value.toBigDecimal().minus(it.cash.toBigDecimal())
-                    .setScale(2, RoundingMode.HALF_UP).toPlainString()
-            }"
+            investing = it.value.toBigDecimal().minus(it.cash.toBigDecimal())
+                .setScale(2, RoundingMode.HALF_UP)
+            binding.investingTicker.text = "\$${investing.toPlainString()}"
 
             Log.d(TAG, it.toString())
         }
@@ -60,16 +57,18 @@ class PortfolioFragment : Fragment() {
                 override fun getItem(index: Int) = history[index]
 
                 override fun getY(index: Int): Float {
-                    val change = getItem(index).change.toBigDecimal()
-                    if (index == count - 1) return investing.toFloat()
-                    return getY(index + 1).toBigDecimal().minus(change).toFloat()
+                    return getItem(index).value
                 }
             }
 
-            binding.sparkView.scrubListener = SparkView.OnScrubListener { value ->
-                value?.let {
-                    binding.scrub.text = (value as PortfolioHistory).date
+            binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
+                (history as PortfolioHistory?)?.let {
+                    binding.scrub.text = history.date
+                    binding.investingTicker.text = "\$${history.value}"
+                    return@OnScrubListener
                 }
+
+                binding.investingTicker.text = "\$${investing.toPlainString()}"
             }
         }
 

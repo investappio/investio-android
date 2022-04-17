@@ -25,7 +25,7 @@ data class Asset(val quantity: Float, val stock: Stock)
 data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, Asset>)
 
 @Serializable
-data class PortfolioHistory(val date: String, val change: Float)
+data class PortfolioHistory(val date: String, val value: Float)
 
 @Serializable
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
