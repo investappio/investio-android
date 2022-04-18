@@ -90,13 +90,13 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
     suspend fun getPrice(
         stock: String
-    ): PriceResponse? {
-        val url = "$BASE_URL/stocks/${stock}/price".toHttpUrl()
+    ): QuoteResponse? {
+        val url = "$BASE_URL/stocks/${stock}/quote".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<PriceResponse>(it) }
+            req.json()?.let { Json.decodeFromString<QuoteResponse>(it) }
         }
     }
 
@@ -137,7 +137,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     suspend fun buyStock(stock: String, amount: Float): PortfolioResponse? {
         val url = "$BASE_URL/stocks/${stock}/buy".toHttpUrl()
 
-        val body = FormBody.Builder().add("quantity", amount.toString()).build()
+        val body = FormBody.Builder().add("qty", amount.toString()).build()
 
         val req = Request.Builder().url(url).post(body)
 
@@ -149,7 +149,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     suspend fun sellStock(stock: String, amount: Float): PortfolioResponse? {
         val url = "$BASE_URL/stocks/${stock}/sell".toHttpUrl()
 
-        val body = FormBody.Builder().add("quantity", amount.toString()).build()
+        val body = FormBody.Builder().add("qty", amount.toString()).build()
 
         val req = Request.Builder().url(url).post(body)
 

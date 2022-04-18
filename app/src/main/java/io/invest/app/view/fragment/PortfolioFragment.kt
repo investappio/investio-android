@@ -19,7 +19,6 @@ import io.invest.app.util.format
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.format.DateTimeFormatter
@@ -65,7 +64,7 @@ class PortfolioFragment : Fragment() {
 
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
-                binding.historicalDate.text = Instant.parse(history.date).format(yearDateFormat)
+                binding.historicalDate.text = history.timestamp.format(yearDateFormat)
                 binding.investingTicker.text = "\$${history.value}"
                 return@OnScrubListener
             }

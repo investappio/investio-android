@@ -10,16 +10,13 @@ val Json = Json { ignoreUnknownKeys = true }
 data class AuthResponse(val success: Boolean = false, val token: String = "")
 
 @Serializable
-data class Stock(val symbol: String, val name: String, val price: StockPrice? = null)
+data class Stock(val symbol: String, val name: String)
 
 @Serializable
-data class Asset(val quantity: Float, val stock: Stock)
+data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, Float>)
 
 @Serializable
-data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, Asset>)
-
-@Serializable
-data class PortfolioHistory(val date: String, val value: Float)
+data class PortfolioHistory(val timestamp: Instant, val value: Float)
 
 @Serializable
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
@@ -35,12 +32,12 @@ data class StockPrice(
     val low: Float,
     val open: Float,
     val volume: Int,
-    val date: Instant,
-    val updated: Instant
+    val average: Float,
+    val timestamp: Instant
 )
 
 @Serializable
-data class PriceResponse(val success: Boolean, val price: Float)
+data class QuoteResponse(val success: Boolean, val quote: Float)
 
 @Serializable
 data class PriceHistoryResponse(val success: Boolean, val prices: List<StockPrice>)
