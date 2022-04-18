@@ -19,4 +19,7 @@
     <string name="action_log_out">Log out</string>
     <string name="hint_search_stocks">Search</string>
     <string name="value_currency">$%1$.2f</string>
+    <string name="week_history_label">2w</string>
+    <string name="month_history_label">3m</string>
+    <string name="year_history_label">1y</string>
 </resources>

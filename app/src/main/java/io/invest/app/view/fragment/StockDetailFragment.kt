@@ -2,6 +2,7 @@ package io.invest.app.view.fragment
 
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -47,6 +48,7 @@ class StockDetailFragment : Fragment() {
 
         lifecycleScope.launch {
             val res = investio.getPriceHistory(args.symbol)
+            Log.d(TAG, res.toString())
             var min = Float.MAX_VALUE
             var max = Float.MIN_VALUE
 
