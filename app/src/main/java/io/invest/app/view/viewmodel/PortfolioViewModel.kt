@@ -8,6 +8,7 @@ import io.invest.app.util.Portfolio
 import io.invest.app.util.PortfolioHistory
 import io.invest.app.util.TimeRange
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.days
 
 @HiltViewModel
 class PortfolioViewModel @Inject constructor(private val investio: Investio) : ViewModel() {
@@ -24,8 +25,19 @@ class PortfolioViewModel @Inject constructor(private val investio: Investio) : V
     }
 
     suspend fun getPortfolioHistory(timeRange: TimeRange = TimeRange.WEEKS) {
-        investio.getPortfolioHistory(timeRange)?.history?.let {
-            _portfolioHistory.value = it
+        val count = when (timeRange) {
+            TimeRange.WEEKS -> 14
+            TimeRange.MONTHS -> 30 * 3
+            TimeRange.YEAR -> 365
+        }
+
+        investio.getPortfolioHistory(timeRange)?.history?.let { history ->
+            _portfolioHistory.value = MutableList(count - history.size) {
+                PortfolioHistory(
+                    history.last().timestamp
+                        .minus(1.days.times(count - it - 1)), 0f
+                )
+            }.plus(history)
         }
     }
 }
