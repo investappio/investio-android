@@ -2,13 +2,12 @@ package io.invest.app.view.fragment
 
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.data.CandleData
@@ -17,10 +16,13 @@ import com.github.mikephil.charting.data.CandleEntry
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.google.android.material.color.MaterialColors
+import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
 import io.invest.app.databinding.FragmentStockDetailBinding
 import io.invest.app.net.Investio
+import io.invest.app.util.StockPrice
+import io.invest.app.view.viewmodel.StockViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,6 +37,7 @@ class StockDetailFragment : Fragment() {
     lateinit var investio: Investio
 
     private val args: StockDetailFragmentArgs by navArgs()
+    private val stockViewModel: StockViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,63 +45,75 @@ class StockDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentStockDetailBinding.inflate(inflater)
-        binding.textView.text = args.symbol
 
         setupChart()
+        binding.quote.setCharacterLists(TickerUtils.provideNumberList())
 
-        lifecycleScope.launch {
-            val res = investio.getPriceHistory(args.symbol)
-            Log.d(TAG, res.toString())
-            var min = Float.MAX_VALUE
-            var max = Float.MIN_VALUE
-
-            res?.prices?.let {
-                val entries = it.mapIndexed { index, price ->
-                    max = maxOf(max, price.high, price.open, price.close)
-                    min = minOf(min, price.low, price.open, price.close)
-
-                    CandleEntry(
-                        index.toFloat(),
-                        price.high,
-                        price.low,
-                        price.open,
-                        price.close
-                    )
-                }
-
-                val dataSet = CandleDataSet(entries, "").apply {
-                    setDrawHorizontalHighlightIndicator(false)
-
-                    decreasingColor = MaterialColors.getColor(
-                        binding.chart,
-                        com.google.android.material.R.attr.colorError
-                    )
-
-                    increasingColor =
-                        MaterialColors.getColor(binding.chart, R.attr.colorSuccess)
-
-                    increasingPaintStyle = Paint.Style.FILL
-
-                    neutralColor = MaterialColors.getColor(
-                        binding.chart,
-                        com.google.android.material.R.attr.colorOnSurface
-                    )
-
-                    shadowColor = neutralColor
-
-                    setDrawValues(false)
-                }
-
-                binding.chart.data = CandleData(dataSet)
-                binding.chart.xAxis.axisMaximum = maxOf(dataSet.entryCount.toFloat(), 10f)
-                binding.chart.axisLeft.axisMinimum = min - 1
-                binding.chart.axisLeft.axisMaximum = max + 1
-                binding.chart.invalidate()
-            }
+        stockViewModel.stock.observe(viewLifecycleOwner) {
+            binding.symbol.text = it.symbol
+            binding.name.text = it.name
         }
 
-        (activity as AppCompatActivity).supportActionBar?.title = args.symbol
+        stockViewModel.quote.observe(viewLifecycleOwner) {
+            binding.quote.text = "\$${it.toPlainString()}"
+        }
+
+        stockViewModel.priceHistory.observe(viewLifecycleOwner) {
+            updateChart(it)
+        }
+
+        lifecycleScope.launch {
+            stockViewModel.getStock(args.symbol)
+            stockViewModel.getQuote(args.symbol)
+            stockViewModel.getPriceHistory(args.symbol)
+        }
+
         return binding.root
+    }
+
+    private fun updateChart(prices: List<StockPrice>) {
+        var min = Float.MAX_VALUE
+        var max = Float.MIN_VALUE
+
+        val entries = prices.mapIndexed { index, price ->
+            max = maxOf(max, price.high, price.open, price.close)
+            min = minOf(min, price.low, price.open, price.close)
+
+            CandleEntry(
+                index.toFloat(),
+                price.high,
+                price.low,
+                price.open,
+                price.close
+            )
+        }
+
+        val dataSet = CandleDataSet(entries, "").apply {
+            setDrawHorizontalHighlightIndicator(false)
+
+            decreasingColor = MaterialColors.getColor(
+                binding.chart,
+                com.google.android.material.R.attr.colorError
+            )
+
+            increasingColor =
+                MaterialColors.getColor(binding.chart, R.attr.colorSuccess)
+
+            increasingPaintStyle = Paint.Style.FILL
+
+            neutralColor = MaterialColors.getColor(
+                binding.chart,
+                com.google.android.material.R.attr.colorOnSurface
+            )
+
+            shadowColor = neutralColor
+
+            setDrawValues(false)
+        }
+
+        binding.chart.data = CandleData(dataSet)
+        binding.chart.xAxis.axisMaximum = maxOf(dataSet.entryCount.toFloat(), 10f)
+        binding.chart.invalidate()
     }
 
     private fun setupChart() {
@@ -119,6 +134,7 @@ class StockDetailFragment : Fragment() {
             xAxis.apply {
                 setDrawGridLines(false)
                 setDrawLabels(false)
+                setDrawAxisLine(false)
                 setAvoidFirstLastClipping(true)
             }
 

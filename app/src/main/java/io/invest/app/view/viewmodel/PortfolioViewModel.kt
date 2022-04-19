@@ -23,7 +23,7 @@ class PortfolioViewModel @Inject constructor(private val investio: Investio) : V
         }
     }
 
-    suspend fun getPortfolioHistory(timeRange: TimeRange) {
+    suspend fun getPortfolioHistory(timeRange: TimeRange = TimeRange.WEEKS) {
         investio.getPortfolioHistory(timeRange)?.history?.let {
             _portfolioHistory.value = it
         }

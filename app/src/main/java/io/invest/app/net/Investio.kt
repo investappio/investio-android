@@ -88,10 +88,22 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun getPrice(
-        stock: String
+    suspend fun getStock(
+        symbol: String
+    ): StockResponse? {
+        val url = "$BASE_URL/stocks/${symbol}".toHttpUrl()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<StockResponse>(it) }
+        }
+    }
+
+    suspend fun getQuote(
+        symbol: String
     ): QuoteResponse? {
-        val url = "$BASE_URL/stocks/${stock}/quote".toHttpUrl()
+        val url = "$BASE_URL/stocks/${symbol}/quote".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
@@ -101,11 +113,11 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     }
 
     suspend fun getPriceHistory(
-        stock: String,
+        symbol: String,
         timeRange: TimeRange = TimeRange.WEEKS,
     ): PriceHistoryResponse? {
         val url =
-            "$BASE_URL/stocks/${stock}/price/historical/${timeRange.range}".toHttpUrl()
+            "$BASE_URL/stocks/${symbol}/price/historical/${timeRange.range}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
@@ -134,8 +146,8 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun buyStock(stock: String, amount: Float): PortfolioResponse? {
-        val url = "$BASE_URL/stocks/${stock}/buy".toHttpUrl()
+    suspend fun buyStock(symbol: String, amount: Float): PortfolioResponse? {
+        val url = "$BASE_URL/stocks/${symbol}/buy".toHttpUrl()
 
         val body = FormBody.Builder().add("qty", amount.toString()).build()
 
@@ -146,8 +158,8 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun sellStock(stock: String, amount: Float): PortfolioResponse? {
-        val url = "$BASE_URL/stocks/${stock}/sell".toHttpUrl()
+    suspend fun sellStock(symbol: String, amount: Float): PortfolioResponse? {
+        val url = "$BASE_URL/stocks/${symbol}/sell".toHttpUrl()
 
         val body = FormBody.Builder().add("qty", amount.toString()).build()
 
