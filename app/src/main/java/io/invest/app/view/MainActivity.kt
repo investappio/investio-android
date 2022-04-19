@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var appBarConfig: AppBarConfiguration
-    private lateinit var navGraph: NavGraph
 
     @Inject
     lateinit var localStore: LocalStore
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         navController = binding.navHostFragment.getFragment<NavHostFragment>().navController
-        navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
 
         // Used to know when we are at a "top level" destination
         appBarConfig = AppBarConfiguration.Builder(
@@ -64,7 +62,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        navController.graph = navGraph
         setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(navController, appBarConfig)
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)

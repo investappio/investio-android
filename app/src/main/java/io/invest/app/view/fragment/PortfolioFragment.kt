@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.color.MaterialColors
 import com.robinhood.spark.SparkAdapter
 import com.robinhood.spark.SparkView
 import com.robinhood.ticker.TickerUtils
@@ -44,6 +45,7 @@ class PortfolioFragment : Fragment() {
     ): View {
         _binding = FragmentPortfolioBinding.inflate(inflater, container, false)
 
+        setupChart()
         binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
 
         portfolioViewModel.portfolio.observe(viewLifecycleOwner) {
@@ -52,31 +54,20 @@ class PortfolioFragment : Fragment() {
             binding.investingTicker.text = "\$${investing.toPlainString()}"
         }
 
-        binding.sparkView.adapter = object : SparkAdapter() {
-            override fun getCount(): Int = history.size
-
-            override fun getItem(index: Int) = history.getOrNull(index)
-
-            override fun getY(index: Int): Float {
-                return getItem(index)?.value ?: 0f
-            }
-        }
-
-        binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
-            (history as PortfolioHistory?)?.let {
-                binding.historicalDate.text = history.timestamp.format(yearDateFormat)
-                binding.investingTicker.text = "\$${history.value}"
-                return@OnScrubListener
-            }
-
-            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
-            binding.investingTicker.text = "\$${investing.toPlainString()}"
-        }
-
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
             history.clear()
             history.addAll(it)
             binding.sparkView.adapter.notifyDataSetChanged()
+
+            binding.sparkView.lineColor = if (history.last().value < history.first().value) {
+                MaterialColors.getColor(
+                    binding.sparkView,
+                    com.google.android.material.R.attr.colorError
+                )
+            } else {
+                MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
+            }
+
             binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
         }
 
@@ -99,10 +90,33 @@ class PortfolioFragment : Fragment() {
 
         lifecycleScope.launchWhenStarted {
             portfolioViewModel.getPortfolio()
-            portfolioViewModel.getPortfolioHistory(TimeRange.WEEKS)
+            portfolioViewModel.getPortfolioHistory()
         }
 
         return binding.root
+    }
+
+    private fun setupChart() {
+        binding.sparkView.adapter = object : SparkAdapter() {
+            override fun getCount(): Int = history.size
+
+            override fun getItem(index: Int) = history.getOrNull(index)
+
+            override fun getY(index: Int): Float {
+                return getItem(index)?.value ?: 0f
+            }
+        }
+
+        binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
+            (history as PortfolioHistory?)?.let {
+                binding.historicalDate.text = history.timestamp.format(yearDateFormat)
+                binding.investingTicker.text = "\$${history.value}"
+                return@OnScrubListener
+            }
+
+            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
+            binding.investingTicker.text = "\$${investing.toPlainString()}"
+        }
     }
 
     override fun onDestroyView() {

@@ -25,6 +25,9 @@ data class PortfolioHistoryResponse(val success: Boolean, val history: List<Port
 data class StockListResponse(val success: Boolean, val stocks: List<Stock>)
 
 @Serializable
+data class StockResponse(val success: Boolean, val stock: Stock)
+
+@Serializable
 data class StockPrice(
     val symbol: String,
     val close: Float,
@@ -33,6 +36,7 @@ data class StockPrice(
     val open: Float,
     val volume: Int,
     val average: Float,
+    val change: Float,
     val timestamp: Instant
 )
 
