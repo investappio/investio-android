@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.color.MaterialColors
 import com.robinhood.spark.SparkAdapter
 import com.robinhood.spark.SparkView
@@ -35,6 +38,7 @@ class PortfolioFragment : Fragment() {
 
     private val portfolioViewModel: PortfolioViewModel by viewModels()
     private var investing = BigDecimal(0)
+    private val activity get() = requireActivity() as AppCompatActivity
     private val history = mutableListOf<PortfolioHistory>()
 
     private val yearDateFormat = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.getDefault())
@@ -47,12 +51,20 @@ class PortfolioFragment : Fragment() {
         _binding = FragmentPortfolioBinding.inflate(inflater, container, false)
 
         setupChart()
+
+        activity.apply {
+            setSupportActionBar(binding.toolbar)
+            setupActionBarWithNavController(findNavController())
+        }
+
         binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
 
         portfolioViewModel.portfolio.observe(viewLifecycleOwner) {
             investing = it.value.toBigDecimal().minus(it.cash.toBigDecimal())
                 .setScale(2, RoundingMode.HALF_UP)
             binding.investingTicker.text = "\$${investing.toPlainString()}"
+            binding.collapsingToolbarLayout.title =
+                "Cash: \$${it.cash.toBigDecimal().setScale(2, RoundingMode.HALF_UP)}"
         }
 
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
@@ -72,7 +84,7 @@ class PortfolioFragment : Fragment() {
             binding.historicalDate.text = Clock.System.now().formatLocal(yearDateFormat)
         }
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launchWhenCreated {
             portfolioViewModel.getPortfolio()
             portfolioViewModel.getPortfolioHistory()
         }
@@ -95,7 +107,8 @@ class PortfolioFragment : Fragment() {
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
                 binding.historicalDate.text = history.timestamp.format(yearDateFormat)
-                binding.investingTicker.text = "\$${history.value.toBigDecimal().minus(history.cash.toBigDecimal())}"
+                binding.investingTicker.text =
+                    "\$${history.value.toBigDecimal().minus(history.cash.toBigDecimal())}"
                 return@OnScrubListener
             }
 

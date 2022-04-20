@@ -94,7 +94,7 @@ class RegisterFragment : Fragment() {
                             localStore.setApiToken(res.token)
                         }
 
-                        findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToInvestingFragment())
+                        findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToPortfolioFragment())
                     }
 
                     Log.d(TAG, res.token)

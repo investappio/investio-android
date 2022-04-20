@@ -8,12 +8,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
-import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
 import io.invest.app.R
@@ -62,8 +60,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        setSupportActionBar(binding.toolbar)
-        setupActionBarWithNavController(navController, appBarConfig)
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
 
         // Bottom navigation's tlds should not have back stack entries
@@ -72,12 +68,6 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigation.visibility = View.GONE
             } else {
                 binding.bottomNavigation.visibility = View.VISIBLE
-            }
-
-            if (destination.id in listOf(R.id.login_fragment, R.id.register_fragment)) {
-                binding.toolbar.visibility = View.GONE
-            } else {
-                binding.toolbar.visibility = View.VISIBLE
             }
         }
     }

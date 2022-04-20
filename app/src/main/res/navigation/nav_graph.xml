@@ -16,7 +16,7 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_login_fragment_to_investing_fragment"
+            android:id="@+id/action_login_fragment_to_portfolio_fragment"
             app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
@@ -28,7 +28,7 @@
         android:label="@string/title_register"
         tools:layout="@layout/fragment_register">
         <action
-            android:id="@+id/action_register_fragment_to_investing_fragment"
+            android:id="@+id/action_register_fragment_to_portfolio_fragment"
             app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
@@ -44,17 +44,17 @@
         android:name="io.invest.app.view.fragment.PortfolioFragment"
         android:label="@string/title_portfolio">
         <action
-            android:id="@+id/action_investing_fragment_to_profile_fragment"
+            android:id="@+id/action_portfolio_fragment_to_profile_fragment"
             app:destination="@id/profile_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_investing_fragment_to_browse_fragment"
+            android:id="@+id/action_portfolio_fragment_to_browse_fragment"
             app:destination="@id/browse_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_investing_fragment_to_feed_fragment"
+            android:id="@+id/action_portfolio_fragment_to_feed_fragment"
             app:destination="@id/feed_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
@@ -71,7 +71,7 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_browse_fragment_to_investing_fragment"
+            android:id="@+id/action_browse_fragment_to_portfolio_fragment"
             app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
@@ -91,7 +91,7 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile">
         <action
-            android:id="@+id/action_profile_fragment_to_investing_fragment"
+            android:id="@+id/action_profile_fragment_to_portfolio_fragment"
             app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
@@ -112,7 +112,7 @@
         android:name="io.invest.app.view.fragment.FeedFragment"
         android:label="@string/title_feed">
         <action
-            android:id="@+id/action_feed_fragment_to_investing_fragment"
+            android:id="@+id/action_feed_fragment_to_portfolio_fragment"
             app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />

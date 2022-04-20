@@ -68,7 +68,7 @@ class LoginFragment : Fragment() {
                             localStore.setApiToken(res.token)
                         }
 
-                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToInvestingFragment())
+                        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToPortfolioFragment())
                     }
 
                     Log.d(TAG, res.token)
