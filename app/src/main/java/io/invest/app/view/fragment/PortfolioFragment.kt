@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.MaterialColors
 import com.robinhood.spark.SparkAdapter
 import com.robinhood.spark.SparkView
-import com.robinhood.spark.animation.LineSparkAnimator
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
@@ -18,6 +17,7 @@ import io.invest.app.databinding.FragmentPortfolioBinding
 import io.invest.app.util.PortfolioHistory
 import io.invest.app.util.TimeRange
 import io.invest.app.util.format
+import io.invest.app.util.formatLocal
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -56,8 +56,6 @@ class PortfolioFragment : Fragment() {
         }
 
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
-            if (history.isNotEmpty()) binding.sparkView.sparkAnimator = LineSparkAnimator()
-
             history.clear()
             history.addAll(it)
             binding.sparkView.adapter.notifyDataSetChanged()
@@ -71,24 +69,7 @@ class PortfolioFragment : Fragment() {
                 MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
             }
 
-            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
-        }
-
-        binding.historyToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
-                lifecycleScope.launch {
-                    portfolioViewModel.getPortfolioHistory(
-                        when (checkedId) {
-                            R.id.month_history ->
-                                TimeRange.MONTHS
-                            R.id.year_history ->
-                                TimeRange.YEAR
-                            else ->
-                                TimeRange.WEEKS
-                        }
-                    )
-                }
-            }
+            binding.historicalDate.text = Clock.System.now().formatLocal(yearDateFormat)
         }
 
         lifecycleScope.launchWhenStarted {
@@ -106,19 +87,37 @@ class PortfolioFragment : Fragment() {
             override fun getItem(index: Int) = history.getOrNull(index)
 
             override fun getY(index: Int): Float {
-                return getItem(index)?.value ?: 0f
+                val history = getItem(index)
+                return history?.let { it.value - it.cash } ?: 0f
             }
         }
 
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
                 binding.historicalDate.text = history.timestamp.format(yearDateFormat)
-                binding.investingTicker.text = "\$${history.value}"
+                binding.investingTicker.text = "\$${history.value.toBigDecimal().minus(history.cash.toBigDecimal())}"
                 return@OnScrubListener
             }
 
-            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
+            binding.historicalDate.text = Clock.System.now().formatLocal(yearDateFormat)
             binding.investingTicker.text = "\$${investing.toPlainString()}"
+        }
+
+        binding.historyToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                lifecycleScope.launch {
+                    portfolioViewModel.getPortfolioHistory(
+                        when (checkedId) {
+                            R.id.month_history ->
+                                TimeRange.MONTHS
+                            R.id.year_history ->
+                                TimeRange.YEAR
+                            else ->
+                                TimeRange.WEEKS
+                        }
+                    )
+                }
+            }
         }
     }
 

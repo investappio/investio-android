@@ -16,7 +16,7 @@ data class Stock(val symbol: String, val name: String)
 data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, Float>)
 
 @Serializable
-data class PortfolioHistory(val timestamp: Instant, val value: Float)
+data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: Float)
 
 @Serializable
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
