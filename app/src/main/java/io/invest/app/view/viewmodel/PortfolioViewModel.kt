@@ -35,7 +35,7 @@ class PortfolioViewModel @Inject constructor(private val investio: Investio) : V
             _portfolioHistory.value = MutableList(count - history.size) {
                 PortfolioHistory(
                     history.last().timestamp
-                        .minus(1.days.times(count - it - 1)), 0f
+                        .minus(1.days.times(count - it - 1)), 0f, 0f
                 )
             }.plus(history)
         }

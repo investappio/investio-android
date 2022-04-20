@@ -87,14 +87,15 @@ class PortfolioFragment : Fragment() {
             override fun getItem(index: Int) = history.getOrNull(index)
 
             override fun getY(index: Int): Float {
-                return getItem(index)?.value ?: 0f
+                val history = getItem(index)
+                return history?.let { it.value - it.cash } ?: 0f
             }
         }
 
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
                 binding.historicalDate.text = history.timestamp.format(yearDateFormat)
-                binding.investingTicker.text = "\$${history.value}"
+                binding.investingTicker.text = "\$${history.value.toBigDecimal().minus(history.cash.toBigDecimal())}"
                 return@OnScrubListener
             }
 
