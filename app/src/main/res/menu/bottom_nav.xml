@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/portfolio_fragment"
+        android:id="@id/portfolio_fragment"
         android:icon="@drawable/ic_candlestick_chart_24"
         android:title="@string/title_portfolio" />
     <item
-        android:id="@+id/browse_fragment"
+        android:id="@id/browse_fragment"
         android:icon="@drawable/ic_search_24"
         android:title="@string/title_browse" />
     <item
-        android:id="@+id/feed_fragment"
+        android:id="@id/feed_fragment"
         android:icon="@drawable/ic_global_24"
         android:title="@string/title_feed" />
     <item
-        android:id="@+id/profile_fragment"
+        android:id="@id/profile_fragment"
         android:icon="@drawable/ic_person_24"
         android:title="@string/title_profile" />
 </menu>
