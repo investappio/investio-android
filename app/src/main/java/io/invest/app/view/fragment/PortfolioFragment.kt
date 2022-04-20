@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.MaterialColors
 import com.robinhood.spark.SparkAdapter
 import com.robinhood.spark.SparkView
-import com.robinhood.spark.animation.LineSparkAnimator
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
@@ -56,8 +55,6 @@ class PortfolioFragment : Fragment() {
         }
 
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
-            if (history.isNotEmpty()) binding.sparkView.sparkAnimator = LineSparkAnimator()
-
             history.clear()
             history.addAll(it)
             binding.sparkView.adapter.notifyDataSetChanged()
@@ -72,23 +69,6 @@ class PortfolioFragment : Fragment() {
             }
 
             binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
-        }
-
-        binding.historyToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
-                lifecycleScope.launch {
-                    portfolioViewModel.getPortfolioHistory(
-                        when (checkedId) {
-                            R.id.month_history ->
-                                TimeRange.MONTHS
-                            R.id.year_history ->
-                                TimeRange.YEAR
-                            else ->
-                                TimeRange.WEEKS
-                        }
-                    )
-                }
-            }
         }
 
         lifecycleScope.launchWhenStarted {
@@ -119,6 +99,23 @@ class PortfolioFragment : Fragment() {
 
             binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
             binding.investingTicker.text = "\$${investing.toPlainString()}"
+        }
+
+        binding.historyToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                lifecycleScope.launch {
+                    portfolioViewModel.getPortfolioHistory(
+                        when (checkedId) {
+                            R.id.month_history ->
+                                TimeRange.MONTHS
+                            R.id.year_history ->
+                                TimeRange.YEAR
+                            else ->
+                                TimeRange.WEEKS
+                        }
+                    )
+                }
+            }
         }
     }
 
