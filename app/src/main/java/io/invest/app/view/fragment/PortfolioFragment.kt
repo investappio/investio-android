@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.color.MaterialColors
 import com.robinhood.spark.SparkAdapter
 import com.robinhood.spark.SparkView
+import com.robinhood.spark.animation.LineSparkAnimator
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
@@ -55,6 +56,8 @@ class PortfolioFragment : Fragment() {
         }
 
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
+            if (history.isNotEmpty()) binding.sparkView.sparkAnimator = LineSparkAnimator()
+
             history.clear()
             history.addAll(it)
             binding.sparkView.adapter.notifyDataSetChanged()
