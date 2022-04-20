@@ -17,6 +17,7 @@ import io.invest.app.databinding.FragmentPortfolioBinding
 import io.invest.app.util.PortfolioHistory
 import io.invest.app.util.TimeRange
 import io.invest.app.util.format
+import io.invest.app.util.formatLocal
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -68,7 +69,7 @@ class PortfolioFragment : Fragment() {
                 MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
             }
 
-            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
+            binding.historicalDate.text = Clock.System.now().formatLocal(yearDateFormat)
         }
 
         lifecycleScope.launchWhenStarted {
@@ -97,7 +98,7 @@ class PortfolioFragment : Fragment() {
                 return@OnScrubListener
             }
 
-            binding.historicalDate.text = Clock.System.now().format(yearDateFormat)
+            binding.historicalDate.text = Clock.System.now().formatLocal(yearDateFormat)
             binding.investingTicker.text = "\$${investing.toPlainString()}"
         }
 
