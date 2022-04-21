@@ -17,16 +17,12 @@ import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
 import io.invest.app.databinding.FragmentPortfolioBinding
-import io.invest.app.util.PortfolioHistory
-import io.invest.app.util.TimeRange
-import io.invest.app.util.format
-import io.invest.app.util.formatLocal
+import io.invest.app.util.*
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 private const val TAG = "Portfolio"
@@ -40,8 +36,6 @@ class PortfolioFragment : Fragment() {
     private var investing = BigDecimal(0)
     private val activity get() = requireActivity() as AppCompatActivity
     private val history = mutableListOf<PortfolioHistory>()
-
-    private val yearDateFormat = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.getDefault())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,7 +75,8 @@ class PortfolioFragment : Fragment() {
                 MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
             }
 
-            binding.historicalDate.text = Clock.System.now().formatLocal(yearDateFormat)
+            binding.historicalDate.text =
+                Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
         }
 
         lifecycleScope.launchWhenCreated {
@@ -106,13 +101,18 @@ class PortfolioFragment : Fragment() {
 
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
-                binding.historicalDate.text = history.timestamp.format(yearDateFormat)
+                binding.historicalDate.text =
+                    history.timestamp.format(yearDateFormat(Locale.getDefault()))
                 binding.investingTicker.text =
-                    "\$${history.value.toBigDecimal().minus(history.cash.toBigDecimal())}"
+                    "\$${
+                        history.value.toBigDecimal().minus(history.cash.toBigDecimal())
+                            .setScale(2, RoundingMode.HALF_UP)
+                    }"
                 return@OnScrubListener
             }
 
-            binding.historicalDate.text = Clock.System.now().formatLocal(yearDateFormat)
+            binding.historicalDate.text =
+                Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
             binding.investingTicker.text = "\$${investing.toPlainString()}"
         }
 
