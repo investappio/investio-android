@@ -1,23 +1,23 @@
 package io.invest.app.view.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.android.material.color.MaterialColors
-import com.robinhood.spark.SparkAdapter
 import com.robinhood.spark.SparkView
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
 import io.invest.app.databinding.FragmentPortfolioBinding
 import io.invest.app.util.*
+import io.invest.app.view.adapter.AssetListAdapter
+import io.invest.app.view.adapter.SparkAdapter
 import io.invest.app.view.viewmodel.AssetViewModel
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.flow.collect
@@ -38,7 +38,9 @@ class PortfolioFragment : Fragment() {
     private val portfolioViewModel: PortfolioViewModel by viewModels()
     private var investing = BigDecimal(0)
     private val activity get() = requireActivity() as AppCompatActivity
+    private val portfolioAssets = mutableMapOf<String, Float>()
     private val history = mutableListOf<PortfolioHistory>()
+    private val assetAdapter = AssetListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +50,7 @@ class PortfolioFragment : Fragment() {
         _binding = FragmentPortfolioBinding.inflate(inflater, container, false)
 
         setupChart()
+        setHasOptionsMenu(true)
 
         activity.apply {
             setSupportActionBar(binding.toolbar)
@@ -55,56 +58,88 @@ class PortfolioFragment : Fragment() {
         }
 
         binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
+        binding.assetList.adapter = assetAdapter
 
-        lifecycleScope.launchWhenCreated {
-            portfolioViewModel.getPortfolio()
-            portfolioViewModel.getPortfolioHistory()
+        binding.swipeRefresh.setOnRefreshListener {
+            refresh()
+        }
 
-            portfolioViewModel.portfolioFlow.collect { data ->
-                val portfolio = data.portfolio
-                val portfolioHistory = data.history
+        binding.assetToggle.setOnClickListener {
+            binding.assetList.let {
+                it.visibility = if (it.visibility == View.GONE) View.VISIBLE else View.GONE
+            }
+        }
 
-                history.clear()
-                history.addAll(portfolioHistory)
-                binding.sparkView.adapter.notifyDataSetChanged()
+        lifecycleScope.launch {
 
-                binding.sparkView.lineColor = if (history.last().value < history.first().value) {
-                    MaterialColors.getColor(
-                        binding.sparkView,
-                        com.google.android.material.R.attr.colorError
-                    )
-                } else {
-                    MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    portfolioViewModel.portfolioFlow.collect { data ->
+                        val portfolio = data.portfolio
+                        val portfolioHistory = data.history
+
+                        portfolioAssets.clear()
+                        portfolioAssets.putAll(portfolio.assets)
+
+                        history.clear()
+                        history.addAll(portfolioHistory)
+                        binding.sparkView.adapter.notifyDataSetChanged()
+
+                        val cash =
+                            history.last().cash.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+                        val value =
+                            history.last().value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+                        investing = value.minus(cash).setScale(2, RoundingMode.HALF_UP)
+
+                        binding.investingTicker.text = "\$${investing}"
+                        binding.collapsingToolbarLayout.title = "Cash: \$${cash}"
+
+                        binding.historicalDate.text =
+                            Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
+
+                        assetViewModel.getAssets(*portfolio.assets.keys.toTypedArray())
+                    }
                 }
 
-                val cash = history.last().cash.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
-                val value = history.last().value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
-                investing = value.minus(cash).setScale(2, RoundingMode.HALF_UP)
+                launch {
+                    assetViewModel.assetFlow.collect {
+                        assetAdapter.assets = it
+                        assetAdapter.portfolio = portfolioAssets
+                        assetAdapter.itemList.clear()
+                        assetAdapter.itemList.addAll(it.keys.toList())
+                        assetAdapter.notifyItemRangeChanged(0, it.size)
+                        binding.swipeRefresh.isRefreshing = false
+                    }
+                }
 
-                binding.investingTicker.text = "\$${investing}"
-                binding.collapsingToolbarLayout.title = "Cash: \$${cash}"
-
-                binding.historicalDate.text =
-                    Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
-
-                assetViewModel.getAssets(*portfolio.assets.keys.toTypedArray())
+                refresh()
             }
         }
 
         return binding.root
     }
 
-    private fun setupChart() {
-        binding.sparkView.adapter = object : SparkAdapter() {
-            override fun getCount(): Int = history.size
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.portfolio, menu)
+    }
 
-            override fun getItem(index: Int) = history.getOrNull(index)
-
-            override fun getY(index: Int): Float {
-                val history = getItem(index)
-                return history?.let { it.value - it.cash } ?: 0f
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_refresh -> refresh()
         }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupChart() {
+        binding.sparkView.adapter =
+            object : SparkAdapter<PortfolioHistory>(binding.sparkView, history) {
+                override fun getValue(index: Int): Float {
+                    val history = getItem(index)
+                    return history.value - history.cash
+                }
+            }
 
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
@@ -138,6 +173,13 @@ class PortfolioFragment : Fragment() {
                     )
                 }
             }
+        }
+    }
+
+    private fun refresh() {
+        lifecycleScope.launch {
+            portfolioViewModel.getPortfolio()
+            portfolioViewModel.getPortfolioHistory()
         }
     }
 

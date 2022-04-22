@@ -63,9 +63,9 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun topMovers(count: Int): AssetListResponse? {
+    suspend fun movers(count: Int): AssetListResponse? {
         val url =
-            "$BASE_URL/assets/gainers".toHttpUrl().newBuilder()
+            "$BASE_URL/assets/movers".toHttpUrl().newBuilder()
                 .addQueryParameter("count", count.toString())
                 .build()
 

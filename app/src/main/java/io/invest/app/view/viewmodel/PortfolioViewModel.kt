@@ -3,12 +3,14 @@ package io.invest.app.view.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.invest.app.net.Investio
 import io.invest.app.util.Portfolio
 import io.invest.app.util.PortfolioHistory
 import io.invest.app.util.TimeRange
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.days
 
@@ -20,9 +22,10 @@ class PortfolioViewModel @Inject constructor(private val investio: Investio) : V
     private val portfolio get() = _portfolio
     private val portfolioHistory get() = _portfolioHistory
 
-    val portfolioFlow get() = combine(portfolio.asFlow(), portfolioHistory.asFlow()) { portfolio, history ->
-        PortfolioModel(portfolio, history)
-    }
+    val portfolioFlow
+        get() = combine(portfolio.asFlow(), portfolioHistory.asFlow()) { portfolio, history ->
+            PortfolioModel(portfolio, history)
+        }
 
     suspend fun getPortfolio() {
         investio.getPortfolio()?.portfolio?.let {
