@@ -54,7 +54,7 @@ class PortfolioFragment : Fragment() {
         binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
 
         portfolioViewModel.portfolio.observe(viewLifecycleOwner) {
-            // TODO: Setup a list fragment of stocks in our portfolio
+            // TODO: Setup a list fragment of assets in our portfolio
         }
 
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {

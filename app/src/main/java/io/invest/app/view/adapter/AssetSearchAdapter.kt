@@ -13,7 +13,7 @@ import io.invest.app.util.Asset
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
-class StockSearchAdapter(
+class AssetSearchAdapter(
     context: Context,
     val investio: Investio
 ) : ArrayAdapter<Asset>(context, 0), Filterable {
@@ -36,9 +36,9 @@ class StockSearchAdapter(
             ListItemAssetSearchBinding.bind(convertView)
         }
 
-        val stock = getItem(position)
-        binding.stockNameView.text = stock.name
-        binding.stockSymbolView.text = stock.symbol
+        val asset = getItem(position)
+        binding.name.text = asset.name
+        binding.symbol.text = asset.symbol
         return binding.root
     }
 

@@ -22,13 +22,13 @@ data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: 
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
 
 @Serializable
-data class StockListResponse(val success: Boolean, val assets: List<Asset>)
+data class AssetListResponse(val success: Boolean, val assets: List<Asset>)
 
 @Serializable
 data class AssetResponse(val success: Boolean, val asset: Asset)
 
 @Serializable
-data class StockPrice(
+data class AssetPrice(
     val symbol: String,
     val close: Float,
     val high: Float,
@@ -44,7 +44,7 @@ data class StockPrice(
 data class QuoteResponse(val success: Boolean, val quote: Float)
 
 @Serializable
-data class PriceHistoryResponse(val success: Boolean, val prices: List<StockPrice>)
+data class PriceHistoryResponse(val success: Boolean, val prices: List<AssetPrice>)
 
 @Serializable
 data class PortfolioResponse(val success: Boolean = false, val portfolio: Portfolio)

@@ -63,7 +63,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun topGainassets(count: Int): StockListResponse? {
+    suspend fun topGainassets(count: Int): AssetListResponse? {
         val url =
             "$BASE_URL/assets/gainers".toHttpUrl().newBuilder()
                 .addQueryParameter("count", count.toString())
@@ -72,11 +72,11 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockListResponse>(it) }
+            req.json()?.let { Json.decodeFromString<AssetListResponse>(it) }
         }
     }
 
-    suspend fun searchAssets(query: String): StockListResponse? {
+    suspend fun searchAssets(query: String): AssetListResponse? {
         val url =
             "$BASE_URL/assets/search".toHttpUrl().newBuilder().addQueryParameter("query", query)
                 .build()
@@ -84,11 +84,11 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockListResponse>(it) }
+            req.json()?.let { Json.decodeFromString<AssetListResponse>(it) }
         }
     }
 
-    suspend fun getStock(
+    suspend fun getAsset(
         symbol: String
     ): AssetResponse? {
         val url = "$BASE_URL/assets/${symbol}".toHttpUrl()
@@ -158,7 +158,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun buyStock(symbol: String, amount: Float): PortfolioResponse? {
+    suspend fun buyAsset(symbol: String, amount: Float): PortfolioResponse? {
         val url = "$BASE_URL/assets/${symbol}/buy".toHttpUrl()
 
         val body = FormBody.Builder().add("qty", amount.toString()).build()
@@ -170,7 +170,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun sellStock(symbol: String, amount: Float): PortfolioResponse? {
+    suspend fun sellAsset(symbol: String, amount: Float): PortfolioResponse? {
         val url = "$BASE_URL/assets/${symbol}/sell".toHttpUrl()
 
         val body = FormBody.Builder().add("qty", amount.toString()).build()

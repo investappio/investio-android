@@ -21,12 +21,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
 import io.invest.app.databinding.FragmentAssetsDetailBinding
 import io.invest.app.net.Investio
-import io.invest.app.util.StockPrice
+import io.invest.app.util.AssetPrice
 import io.invest.app.view.viewmodel.AssetViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "StockDetail"
+private const val TAG = "AssetDetail"
 
 @AndroidEntryPoint
 class AssetDetailFragment : Fragment() {
@@ -49,7 +49,7 @@ class AssetDetailFragment : Fragment() {
         setupChart()
         binding.quote.setCharacterLists(TickerUtils.provideNumberList())
 
-        assetViewModel.stock.observe(viewLifecycleOwner) {
+        assetViewModel.asset.observe(viewLifecycleOwner) {
             binding.symbol.text = it.symbol
             binding.name.text = it.name
         }
@@ -63,7 +63,7 @@ class AssetDetailFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            assetViewModel.getStock(args.symbol)
+            assetViewModel.getAsset(args.symbol)
             assetViewModel.getQuote(args.symbol)
             assetViewModel.getPriceHistory(args.symbol)
         }
@@ -71,7 +71,7 @@ class AssetDetailFragment : Fragment() {
         return binding.root
     }
 
-    private fun updateChart(prices: List<StockPrice>) {
+    private fun updateChart(prices: List<AssetPrice>) {
         var min = Float.MAX_VALUE
         var max = Float.MIN_VALUE
 
