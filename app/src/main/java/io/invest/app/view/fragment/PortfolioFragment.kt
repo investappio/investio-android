@@ -17,10 +17,7 @@ import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
 import io.invest.app.databinding.FragmentPortfolioBinding
-import io.invest.app.util.PortfolioHistory
-import io.invest.app.util.TimeRange
-import io.invest.app.util.formatLocal
-import io.invest.app.util.yearDateFormat
+import io.invest.app.util.*
 import io.invest.app.view.viewmodel.AssetViewModel
 import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.flow.collect
@@ -112,7 +109,7 @@ class PortfolioFragment : Fragment() {
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
                 binding.historicalDate.text =
-                    history.timestamp.formatLocal(yearDateFormat(Locale.getDefault()))
+                    history.timestamp.format(yearDateFormat(Locale.getDefault()))
                 binding.investingTicker.text =
                     "\$${
                         history.value.toBigDecimal().minus(history.cash.toBigDecimal())
