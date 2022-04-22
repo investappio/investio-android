@@ -19,53 +19,53 @@ import com.google.android.material.color.MaterialColors
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
-import io.invest.app.databinding.FragmentStockDetailBinding
+import io.invest.app.databinding.FragmentAssetsDetailBinding
 import io.invest.app.net.Investio
 import io.invest.app.util.StockPrice
-import io.invest.app.view.viewmodel.StockViewModel
+import io.invest.app.view.viewmodel.AssetViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "StockDetail"
 
 @AndroidEntryPoint
-class StockDetailFragment : Fragment() {
-    private var _binding: FragmentStockDetailBinding? = null
+class AssetDetailFragment : Fragment() {
+    private var _binding: FragmentAssetsDetailBinding? = null
     private val binding get() = _binding!!
 
     @Inject
     lateinit var investio: Investio
 
-    private val args: StockDetailFragmentArgs by navArgs()
-    private val stockViewModel: StockViewModel by viewModels()
+    private val args: AssetDetailFragmentArgs by navArgs()
+    private val assetViewModel: AssetViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStockDetailBinding.inflate(inflater)
+        _binding = FragmentAssetsDetailBinding.inflate(inflater)
 
         setupChart()
         binding.quote.setCharacterLists(TickerUtils.provideNumberList())
 
-        stockViewModel.stock.observe(viewLifecycleOwner) {
+        assetViewModel.stock.observe(viewLifecycleOwner) {
             binding.symbol.text = it.symbol
             binding.name.text = it.name
         }
 
-        stockViewModel.quote.observe(viewLifecycleOwner) {
+        assetViewModel.quote.observe(viewLifecycleOwner) {
             binding.quote.text = "\$${it.toPlainString()}"
         }
 
-        stockViewModel.priceHistory.observe(viewLifecycleOwner) {
+        assetViewModel.priceHistory.observe(viewLifecycleOwner) {
             updateChart(it)
         }
 
         lifecycleScope.launch {
-            stockViewModel.getStock(args.symbol)
-            stockViewModel.getQuote(args.symbol)
-            stockViewModel.getPriceHistory(args.symbol)
+            assetViewModel.getStock(args.symbol)
+            assetViewModel.getQuote(args.symbol)
+            assetViewModel.getPriceHistory(args.symbol)
         }
 
         return binding.root

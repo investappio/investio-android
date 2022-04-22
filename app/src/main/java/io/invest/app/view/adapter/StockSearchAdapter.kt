@@ -7,33 +7,33 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import io.invest.app.databinding.ListItemStockSearchBinding
+import io.invest.app.databinding.ListItemAssetSearchBinding
 import io.invest.app.net.Investio
-import io.invest.app.util.Stock
+import io.invest.app.util.Asset
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 class StockSearchAdapter(
     context: Context,
     val investio: Investio
-) : ArrayAdapter<Stock>(context, 0), Filterable {
+) : ArrayAdapter<Asset>(context, 0), Filterable {
 
-    private var results = listOf<Stock>()
+    private var results = listOf<Asset>()
     private val inflater = LayoutInflater.from(context)
 
     override fun getCount(): Int {
         return results.count()
     }
 
-    override fun getItem(index: Int): Stock {
+    override fun getItem(index: Int): Asset {
         return results[index]
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val binding = if (convertView == null) {
-            ListItemStockSearchBinding.inflate(inflater, parent, false)
+            ListItemAssetSearchBinding.inflate(inflater, parent, false)
         } else {
-            ListItemStockSearchBinding.bind(convertView)
+            ListItemAssetSearchBinding.bind(convertView)
         }
 
         val stock = getItem(position)
@@ -48,7 +48,7 @@ class StockSearchAdapter(
                 val filterResults = FilterResults()
 
                 runBlocking(Dispatchers.IO) {
-                    (investio.searchStocks(query.toString())?.stocks?.take(10) ?: emptyList()).let {
+                    (investio.searchAssets(query.toString())?.assets?.take(10) ?: emptyList()).let {
                         filterResults.values = it
                         filterResults.count = it.size
                     }
@@ -59,7 +59,7 @@ class StockSearchAdapter(
 
             override fun publishResults(query: CharSequence?, filterResults: FilterResults?) {
                 if (filterResults != null && filterResults.count > 0) {
-                    results = filterResults.values as List<Stock>
+                    results = filterResults.values as List<Asset>
                     notifyDataSetChanged()
                 } else {
                     notifyDataSetInvalidated()

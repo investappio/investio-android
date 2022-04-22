@@ -63,9 +63,9 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun topGainStocks(count: Int): StockListResponse? {
+    suspend fun topGainassets(count: Int): StockListResponse? {
         val url =
-            "$BASE_URL/stocks/gainers".toHttpUrl().newBuilder()
+            "$BASE_URL/assets/gainers".toHttpUrl().newBuilder()
                 .addQueryParameter("count", count.toString())
                 .build()
 
@@ -76,9 +76,9 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun searchStocks(query: String): StockListResponse? {
+    suspend fun searchAssets(query: String): StockListResponse? {
         val url =
-            "$BASE_URL/stocks/search".toHttpUrl().newBuilder().addQueryParameter("query", query)
+            "$BASE_URL/assets/search".toHttpUrl().newBuilder().addQueryParameter("query", query)
                 .build()
 
         val req = Request.Builder().url(url).get()
@@ -90,20 +90,32 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
     suspend fun getStock(
         symbol: String
-    ): StockResponse? {
-        val url = "$BASE_URL/stocks/${symbol}".toHttpUrl()
+    ): AssetResponse? {
+        val url = "$BASE_URL/assets/${symbol}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockResponse>(it) }
+            req.json()?.let { Json.decodeFromString<AssetResponse>(it) }
         }
     }
 
     suspend fun getQuote(
         symbol: String
     ): QuoteResponse? {
-        val url = "$BASE_URL/stocks/${symbol}/quote".toHttpUrl()
+        val url = "$BASE_URL/assets/${symbol}/quote".toHttpUrl()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<QuoteResponse>(it) }
+        }
+    }
+
+    suspend fun getQuotes(
+        vararg symbols: String
+    ): QuoteResponse? {
+        val url = "$BASE_URL/assets/quotes?symbols=${symbols.joinToString()}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
@@ -117,7 +129,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         timeRange: TimeRange = TimeRange.WEEKS,
     ): PriceHistoryResponse? {
         val url =
-            "$BASE_URL/stocks/${symbol}/price/historical/${timeRange.range}".toHttpUrl()
+            "$BASE_URL/assets/${symbol}/price/historical/${timeRange.range}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
@@ -147,7 +159,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     }
 
     suspend fun buyStock(symbol: String, amount: Float): PortfolioResponse? {
-        val url = "$BASE_URL/stocks/${symbol}/buy".toHttpUrl()
+        val url = "$BASE_URL/assets/${symbol}/buy".toHttpUrl()
 
         val body = FormBody.Builder().add("qty", amount.toString()).build()
 
@@ -159,7 +171,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     }
 
     suspend fun sellStock(symbol: String, amount: Float): PortfolioResponse? {
-        val url = "$BASE_URL/stocks/${symbol}/sell".toHttpUrl()
+        val url = "$BASE_URL/assets/${symbol}/sell".toHttpUrl()
 
         val body = FormBody.Builder().add("qty", amount.toString()).build()
 

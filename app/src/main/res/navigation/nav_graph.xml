@@ -81,8 +81,8 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_browse_fragment_to_stock_detail_fragment"
-            app:destination="@id/stock_detail_fragment" />
+            android:id="@+id/action_browse_fragment_to_asset_detail_fragment"
+            app:destination="@id/asset_detail_fragment" />
     </fragment>
 
     <fragment
@@ -129,10 +129,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/stock_detail_fragment"
-        android:name="io.invest.app.view.fragment.StockDetailFragment"
+        android:id="@+id/asset_detail_fragment"
+        android:name="io.invest.app.view.fragment.AssetDetailFragment"
         android:label=""
-        tools:layout="@layout/fragment_stock_detail">
+        tools:layout="@layout/fragment_assets_detail">
         <argument
             android:name="symbol"
             app:argType="string" />

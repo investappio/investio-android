@@ -54,11 +54,7 @@ class PortfolioFragment : Fragment() {
         binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
 
         portfolioViewModel.portfolio.observe(viewLifecycleOwner) {
-            investing = it.value.toBigDecimal().minus(it.cash.toBigDecimal())
-                .setScale(2, RoundingMode.HALF_UP)
-            binding.investingTicker.text = "\$${investing.toPlainString()}"
-            binding.collapsingToolbarLayout.title =
-                "Cash: \$${it.cash.toBigDecimal().setScale(2, RoundingMode.HALF_UP)}"
+            // TODO: Setup a list fragment of stocks in our portfolio
         }
 
         portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
@@ -74,6 +70,13 @@ class PortfolioFragment : Fragment() {
             } else {
                 MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
             }
+
+            val cash = it.last().cash.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+            val value = it.last().value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+            investing = value.minus(cash).setScale(2, RoundingMode.HALF_UP)
+
+            binding.investingTicker.text = "\$${investing}"
+            binding.collapsingToolbarLayout.title = "Cash: \$${cash}"
 
             binding.historicalDate.text =
                 Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
@@ -102,7 +105,7 @@ class PortfolioFragment : Fragment() {
         binding.sparkView.scrubListener = SparkView.OnScrubListener { history ->
             (history as PortfolioHistory?)?.let {
                 binding.historicalDate.text =
-                    history.timestamp.format(yearDateFormat(Locale.getDefault()))
+                    history.timestamp.formatLocal(yearDateFormat(Locale.getDefault()))
                 binding.investingTicker.text =
                     "\$${
                         history.value.toBigDecimal().minus(history.cash.toBigDecimal())
@@ -113,7 +116,7 @@ class PortfolioFragment : Fragment() {
 
             binding.historicalDate.text =
                 Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
-            binding.investingTicker.text = "\$${investing.toPlainString()}"
+            binding.investingTicker.text = "\$${investing}"
         }
 
         binding.historyToggle.addOnButtonCheckedListener { _, checkedId, isChecked ->

@@ -41,7 +41,7 @@ class BrowseFragment : Fragment() {
             binding.stockSearchInput.setText("")
 
             val action =
-                BrowseFragmentDirections.actionBrowseFragmentToStockDetailFragment(stock.symbol)
+                BrowseFragmentDirections.actionBrowseFragmentToAssetDetailFragment(stock.symbol)
             findNavController().navigate(action)
             Log.d(TAG, stock.symbol)
         }
