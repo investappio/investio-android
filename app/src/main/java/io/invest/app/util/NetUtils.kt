@@ -44,6 +44,9 @@ data class AssetPrice(
 data class QuoteResponse(val success: Boolean, val quote: Float)
 
 @Serializable
+data class MultiQuoteResponse(val success: Boolean, val quotes: Map<String, Float>)
+
+@Serializable
 data class PriceHistoryResponse(val success: Boolean, val prices: List<AssetPrice>)
 
 @Serializable

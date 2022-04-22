@@ -23,6 +23,7 @@ import io.invest.app.databinding.FragmentAssetsDetailBinding
 import io.invest.app.net.Investio
 import io.invest.app.util.AssetPrice
 import io.invest.app.view.viewmodel.AssetViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,23 +50,17 @@ class AssetDetailFragment : Fragment() {
         setupChart()
         binding.quote.setCharacterLists(TickerUtils.provideNumberList())
 
-        assetViewModel.asset.observe(viewLifecycleOwner) {
-            binding.symbol.text = it.symbol
-            binding.name.text = it.name
-        }
-
-        assetViewModel.quote.observe(viewLifecycleOwner) {
-            binding.quote.text = "\$${it.toPlainString()}"
-        }
-
-        assetViewModel.priceHistory.observe(viewLifecycleOwner) {
-            updateChart(it)
-        }
-
         lifecycleScope.launch {
-            assetViewModel.getAsset(args.symbol)
-            assetViewModel.getQuote(args.symbol)
-            assetViewModel.getPriceHistory(args.symbol)
+            assetViewModel.getAssets(args.symbol)
+
+            assetViewModel.assetFlow.collect { data ->
+                data[args.symbol]?.let {
+                    binding.symbol.text = it.asset.symbol
+                    binding.name.text = it.asset.name
+                    binding.quote.text = "\$${it.quote}"
+                    updateChart(it.priceHistory)
+                }
+            }
         }
 
         return binding.root

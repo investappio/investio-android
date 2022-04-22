@@ -17,8 +17,13 @@ import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
 import io.invest.app.databinding.FragmentPortfolioBinding
-import io.invest.app.util.*
+import io.invest.app.util.PortfolioHistory
+import io.invest.app.util.TimeRange
+import io.invest.app.util.formatLocal
+import io.invest.app.util.yearDateFormat
+import io.invest.app.view.viewmodel.AssetViewModel
 import io.invest.app.view.viewmodel.PortfolioViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import java.math.BigDecimal
@@ -32,6 +37,7 @@ class PortfolioFragment : Fragment() {
     private var _binding: FragmentPortfolioBinding? = null
     private val binding get() = _binding!!
 
+    private val assetViewModel: AssetViewModel by viewModels()
     private val portfolioViewModel: PortfolioViewModel by viewModels()
     private var investing = BigDecimal(0)
     private val activity get() = requireActivity() as AppCompatActivity
@@ -53,38 +59,39 @@ class PortfolioFragment : Fragment() {
 
         binding.investingTicker.setCharacterLists(TickerUtils.provideNumberList())
 
-        portfolioViewModel.portfolio.observe(viewLifecycleOwner) {
-            // TODO: Setup a list fragment of assets in our portfolio
-        }
-
-        portfolioViewModel.portfolioHistory.observe(viewLifecycleOwner) {
-            history.clear()
-            history.addAll(it)
-            binding.sparkView.adapter.notifyDataSetChanged()
-
-            binding.sparkView.lineColor = if (history.last().value < history.first().value) {
-                MaterialColors.getColor(
-                    binding.sparkView,
-                    com.google.android.material.R.attr.colorError
-                )
-            } else {
-                MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
-            }
-
-            val cash = it.last().cash.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
-            val value = it.last().value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
-            investing = value.minus(cash).setScale(2, RoundingMode.HALF_UP)
-
-            binding.investingTicker.text = "\$${investing}"
-            binding.collapsingToolbarLayout.title = "Cash: \$${cash}"
-
-            binding.historicalDate.text =
-                Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
-        }
-
         lifecycleScope.launchWhenCreated {
             portfolioViewModel.getPortfolio()
             portfolioViewModel.getPortfolioHistory()
+
+            portfolioViewModel.portfolioFlow.collect { data ->
+                val portfolio = data.portfolio
+                val portfolioHistory = data.history
+
+                history.clear()
+                history.addAll(portfolioHistory)
+                binding.sparkView.adapter.notifyDataSetChanged()
+
+                binding.sparkView.lineColor = if (history.last().value < history.first().value) {
+                    MaterialColors.getColor(
+                        binding.sparkView,
+                        com.google.android.material.R.attr.colorError
+                    )
+                } else {
+                    MaterialColors.getColor(binding.sparkView, R.attr.colorSuccess)
+                }
+
+                val cash = history.last().cash.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+                val value = history.last().value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+                investing = value.minus(cash).setScale(2, RoundingMode.HALF_UP)
+
+                binding.investingTicker.text = "\$${investing}"
+                binding.collapsingToolbarLayout.title = "Cash: \$${cash}"
+
+                binding.historicalDate.text =
+                    Clock.System.now().formatLocal(yearDateFormat(Locale.getDefault()))
+
+                assetViewModel.getAssets(*portfolio.assets.keys.toTypedArray())
+            }
         }
 
         return binding.root

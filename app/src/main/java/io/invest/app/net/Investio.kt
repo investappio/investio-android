@@ -63,7 +63,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun topGainassets(count: Int): AssetListResponse? {
+    suspend fun topMovers(count: Int): AssetListResponse? {
         val url =
             "$BASE_URL/assets/gainers".toHttpUrl().newBuilder()
                 .addQueryParameter("count", count.toString())
@@ -114,13 +114,13 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
     suspend fun getQuotes(
         vararg symbols: String
-    ): QuoteResponse? {
-        val url = "$BASE_URL/assets/quotes?symbols=${symbols.joinToString()}".toHttpUrl()
+    ): MultiQuoteResponse? {
+        val url = "$BASE_URL/assets/quotes?symbols=${symbols.joinToString(",")}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<QuoteResponse>(it) }
+            req.json()?.let { Json.decodeFromString<MultiQuoteResponse>(it) }
         }
     }
 

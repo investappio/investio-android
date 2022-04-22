@@ -2,39 +2,66 @@ package io.invest.app.view.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.invest.app.net.Investio
 import io.invest.app.util.Asset
 import io.invest.app.util.AssetPrice
-import io.invest.app.util.TimeRange
+import kotlinx.coroutines.flow.combine
 import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 @HiltViewModel
 class AssetViewModel @Inject constructor(private val investio: Investio) : ViewModel() {
-    private val _asset: MutableLiveData<Asset> = MutableLiveData()
-    private val _priceHistory: MutableLiveData<List<AssetPrice>> = MutableLiveData()
-    private val _quote: MutableLiveData<BigDecimal> = MutableLiveData()
+    private val _assets: MutableLiveData<Map<String, Asset>> = MutableLiveData()
+    private val _priceHistories: MutableLiveData<Map<String, List<AssetPrice>>> = MutableLiveData()
+    private val _quotes: MutableLiveData<Map<String, BigDecimal>> = MutableLiveData()
 
-    val asset get() = _asset
-    val priceHistory get() = _priceHistory
-    val quote get() = _quote
+    private val assets get() = _assets
+    private val priceHistories get() = _priceHistories
+    private val quotes get() = _quotes
 
-    suspend fun getAsset(symbol: String) {
-        investio.getAsset(symbol)?.asset?.let {
-            _asset.value = it
+    val assetFlow
+        get() = combine(
+            assets.asFlow(),
+            priceHistories.asFlow(),
+            quotes.asFlow()
+        ) { assets, prices, quotes ->
+            assets.keys.mapNotNull {
+                val asset = assets[it] ?: return@mapNotNull null
+                val priceHistory = prices[it] ?: return@mapNotNull null
+                val quote = quotes[it] ?: return@mapNotNull null
+
+                it to AssetModel(asset, priceHistory, quote)
+            }.toMap()
         }
+
+    suspend fun getAssets(vararg symbols: String) {
+        val assets = symbols.mapNotNull { symbol ->
+            investio.getAsset(symbol)?.asset?.let {
+                symbol to it
+            }
+        }.toMap()
+
+        val prices = symbols.mapNotNull { symbol ->
+            investio.getPriceHistory(symbol)?.prices?.let {
+                symbol to it
+            }
+        }.toMap()
+
+        val quotes = investio.getQuotes(*symbols)?.quotes?.map {
+            it.key to it.value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+        }?.toMap() ?: emptyMap()
+
+        _assets.value = assets
+        _priceHistories.value = prices
+        _quotes.value = quotes
     }
 
-    suspend fun getPriceHistory(symbol: String, timeRange: TimeRange = TimeRange.WEEKS) {
-        investio.getPriceHistory(symbol, timeRange)?.prices?.let {
-            _priceHistory.value = it
-        }
-    }
-
-    suspend fun getQuote(symbol: String) {
-        investio.getQuote(symbol)?.quote?.let {
-            _quote.value = it.toBigDecimal()
-        }
-    }
+    data class AssetModel(
+        val asset: Asset,
+        val priceHistory: List<AssetPrice>,
+        val quote: BigDecimal
+    )
 }
