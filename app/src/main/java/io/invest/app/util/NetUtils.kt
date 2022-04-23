@@ -6,6 +6,16 @@ import kotlinx.serialization.json.Json
 
 val Json = Json { ignoreUnknownKeys = true }
 
+enum class ValueType(val key: String) {
+    NOTIONAL("notional"),
+    QUANTITY("qty")
+}
+
+enum class Side() {
+    BUY,
+    SELL
+}
+
 @Serializable
 data class AuthResponse(val success: Boolean = false, val token: String = "")
 
@@ -39,6 +49,9 @@ data class AssetPrice(
     val change: Float,
     val timestamp: Instant
 )
+
+@Serializable
+data class SuccessResponse(val success: Boolean)
 
 @Serializable
 data class QuoteResponse(val success: Boolean, val quote: Float)

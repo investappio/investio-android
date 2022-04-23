@@ -153,5 +153,8 @@
         <argument
             android:name="symbol"
             app:argType="string" />
+        <action
+            android:id="@+id/action_asset_trade_fragment_to_portfolio_fragment"
+            app:destination="@id/portfolio_fragment" />
     </fragment>
 </navigation>

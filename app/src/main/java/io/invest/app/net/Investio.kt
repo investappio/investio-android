@@ -2,6 +2,7 @@ package io.invest.app.net
 
 import android.util.Log
 import io.invest.app.util.*
+import io.invest.app.view.viewmodel.TradeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -158,27 +159,27 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun buyAsset(symbol: String, amount: Float): PortfolioResponse? {
+    suspend fun buyAsset(symbol: String, amount: Float, type: ValueType): SuccessResponse? {
         val url = "$BASE_URL/assets/${symbol}/buy".toHttpUrl()
 
-        val body = FormBody.Builder().add("qty", amount.toString()).build()
+        val body = FormBody.Builder().add(type.key, amount.toString()).build()
 
         val req = Request.Builder().url(url).post(body)
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<PortfolioResponse>(it) }
+            req.json()?.let { Json.decodeFromString<SuccessResponse>(it) }
         }
     }
 
-    suspend fun sellAsset(symbol: String, amount: Float): PortfolioResponse? {
+    suspend fun sellAsset(symbol: String, amount: Float, type: ValueType): SuccessResponse? {
         val url = "$BASE_URL/assets/${symbol}/sell".toHttpUrl()
 
-        val body = FormBody.Builder().add("qty", amount.toString()).build()
+        val body = FormBody.Builder().add(type.key, amount.toString()).build()
 
         val req = Request.Builder().url(url).post(body)
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<PortfolioResponse>(it) }
+            req.json()?.let { Json.decodeFromString<SuccessResponse>(it) }
         }
     }
 
