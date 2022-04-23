@@ -3,7 +3,10 @@ package io.invest.app.view.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import io.invest.app.R
 import io.invest.app.databinding.ListItemAssetBinding
 import io.invest.app.util.AssetPrice
 import io.invest.app.view.viewmodel.AssetViewModel
@@ -48,6 +51,11 @@ class AssetListAdapter(val itemList: MutableList<String> = mutableListOf()) :
                     object : SparkAdapter<AssetPrice>(binding.sparkView, it.priceHistory) {
                         override fun getValue(index: Int): Float = getItem(index).close
                     }
+
+                binding.root.setOnClickListener { view ->
+                    val args = bundleOf("symbol" to it.asset.symbol)
+                    Navigation.findNavController(view).navigate(R.id.asset_detail_fragment, args)
+                }
             }
         }
 

@@ -167,12 +167,12 @@
                     <Button
                         android:id="@+id/asset_toggle"
                         style="?attr/spinnerStyle"
-                        app:layout_constraintStart_toEndOf="@id/asset_label"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:minWidth="0dp"
-                        android:layout_height="wrap_content"/>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/asset_label"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/asset_list"

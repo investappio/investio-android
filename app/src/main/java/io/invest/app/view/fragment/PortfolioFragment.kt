@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -35,7 +36,7 @@ class PortfolioFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val assetViewModel: AssetViewModel by viewModels()
-    private val portfolioViewModel: PortfolioViewModel by viewModels()
+    private val portfolioViewModel: PortfolioViewModel by activityViewModels()
     private var investing = BigDecimal(0)
     private val activity get() = requireActivity() as AppCompatActivity
     private val portfolioAssets = mutableMapOf<String, Float>()
@@ -71,7 +72,6 @@ class PortfolioFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     portfolioViewModel.portfolioFlow.collect { data ->

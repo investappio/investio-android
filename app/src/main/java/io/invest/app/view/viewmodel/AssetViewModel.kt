@@ -14,13 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssetViewModel @Inject constructor(private val investio: Investio) : ViewModel() {
-    private val _assets: MutableLiveData<Map<String, Asset>> = MutableLiveData()
-    private val _priceHistories: MutableLiveData<Map<String, List<AssetPrice>>> = MutableLiveData()
-    private val _quotes: MutableLiveData<Map<String, BigDecimal>> = MutableLiveData()
-
-    private val assets get() = _assets
-    private val priceHistories get() = _priceHistories
-    private val quotes get() = _quotes
+    private val assets =  MutableLiveData<Map<String, Asset>>()
+    private val priceHistories = MutableLiveData<Map<String, List<AssetPrice>>>()
+    private val quotes = MutableLiveData<Map<String, BigDecimal>>()
 
     val assetFlow
         get() = combine(
@@ -54,9 +50,9 @@ class AssetViewModel @Inject constructor(private val investio: Investio) : ViewM
             it.key to it.value.toBigDecimal().setScale(2, RoundingMode.HALF_UP)
         }?.toMap() ?: emptyMap()
 
-        _assets.value = assets
-        _priceHistories.value = prices
-        _quotes.value = quotes
+        this.assets.value = assets
+        priceHistories.value = prices
+        this.quotes.value = quotes
     }
 
     data class AssetModel(

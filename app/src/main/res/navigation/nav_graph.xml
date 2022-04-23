@@ -42,7 +42,8 @@
     <fragment
         android:id="@+id/portfolio_fragment"
         android:name="io.invest.app.view.fragment.PortfolioFragment"
-        android:label="@string/title_portfolio">
+        android:label="@string/title_portfolio"
+        tools:layout="@layout/fragment_portfolio">
         <action
             android:id="@+id/action_portfolio_fragment_to_profile_fragment"
             app:destination="@id/profile_fragment"
@@ -58,6 +59,9 @@
             app:destination="@id/feed_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_portfolio_fragment_to_asset_detail_fragment"
+            app:destination="@id/asset_detail_fragment" />
     </fragment>
 
     <fragment
@@ -133,6 +137,19 @@
         android:name="io.invest.app.view.fragment.AssetDetailFragment"
         android:label=""
         tools:layout="@layout/fragment_assets_detail">
+        <argument
+            android:name="symbol"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_asset_detail_fragment_to_asset_trade_fragment"
+            app:destination="@id/asset_trade_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/asset_trade_fragment"
+        android:name="io.invest.app.view.fragment.AssetTradeFragment"
+        android:label=""
+        tools:layout="@layout/fragment_trade_asset">
         <argument
             android:name="symbol"
             app:argType="string" />

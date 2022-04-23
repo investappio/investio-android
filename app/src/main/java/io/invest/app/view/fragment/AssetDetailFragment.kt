@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
@@ -49,6 +50,11 @@ class AssetDetailFragment : Fragment() {
 
         setupChart()
         binding.quote.setCharacterLists(TickerUtils.provideNumberList())
+
+        binding.actionTrade.setOnClickListener {
+            val action = AssetDetailFragmentDirections.actionAssetDetailFragmentToAssetTradeFragment(args.symbol)
+            findNavController().navigate(action)
+        }
 
         lifecycleScope.launch {
             assetViewModel.getAssets(args.symbol)

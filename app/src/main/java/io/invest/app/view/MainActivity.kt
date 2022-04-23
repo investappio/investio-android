@@ -3,7 +3,9 @@ package io.invest.app.view
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -16,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
 import io.invest.app.R
 import io.invest.app.databinding.ActivityMainBinding
+import io.invest.app.view.viewmodel.PortfolioViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
