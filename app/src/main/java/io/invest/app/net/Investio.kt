@@ -2,6 +2,7 @@ package io.invest.app.net
 
 import android.util.Log
 import io.invest.app.util.*
+import io.invest.app.view.viewmodel.TradeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -63,47 +64,47 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun topGainStocks(count: Int): StockListResponse? {
+    suspend fun movers(count: Int): AssetListResponse? {
         val url =
-            "$BASE_URL/stocks/gainers".toHttpUrl().newBuilder()
+            "$BASE_URL/assets/movers".toHttpUrl().newBuilder()
                 .addQueryParameter("count", count.toString())
                 .build()
 
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockListResponse>(it) }
+            req.json()?.let { Json.decodeFromString<AssetListResponse>(it) }
         }
     }
 
-    suspend fun searchStocks(query: String): StockListResponse? {
+    suspend fun searchAssets(query: String): AssetListResponse? {
         val url =
-            "$BASE_URL/stocks/search".toHttpUrl().newBuilder().addQueryParameter("query", query)
+            "$BASE_URL/assets/search".toHttpUrl().newBuilder().addQueryParameter("query", query)
                 .build()
 
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockListResponse>(it) }
+            req.json()?.let { Json.decodeFromString<AssetListResponse>(it) }
         }
     }
 
-    suspend fun getStock(
+    suspend fun getAsset(
         symbol: String
-    ): StockResponse? {
-        val url = "$BASE_URL/stocks/${symbol}".toHttpUrl()
+    ): AssetResponse? {
+        val url = "$BASE_URL/assets/${symbol}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<StockResponse>(it) }
+            req.json()?.let { Json.decodeFromString<AssetResponse>(it) }
         }
     }
 
     suspend fun getQuote(
         symbol: String
     ): QuoteResponse? {
-        val url = "$BASE_URL/stocks/${symbol}/quote".toHttpUrl()
+        val url = "$BASE_URL/assets/${symbol}/quote".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
@@ -112,12 +113,24 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
+    suspend fun getQuotes(
+        vararg symbols: String
+    ): MultiQuoteResponse? {
+        val url = "$BASE_URL/assets/quotes?symbols=${symbols.joinToString(",")}".toHttpUrl()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<MultiQuoteResponse>(it) }
+        }
+    }
+
     suspend fun getPriceHistory(
         symbol: String,
         timeRange: TimeRange = TimeRange.WEEKS,
     ): PriceHistoryResponse? {
         val url =
-            "$BASE_URL/stocks/${symbol}/price/historical/${timeRange.range}".toHttpUrl()
+            "$BASE_URL/assets/${symbol}/price/historical/${timeRange.range}".toHttpUrl()
 
         val req = Request.Builder().url(url).get()
 
@@ -146,27 +159,27 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun buyStock(symbol: String, amount: Float): PortfolioResponse? {
-        val url = "$BASE_URL/stocks/${symbol}/buy".toHttpUrl()
+    suspend fun buyAsset(symbol: String, amount: Float, type: ValueType): SuccessResponse? {
+        val url = "$BASE_URL/assets/${symbol}/buy".toHttpUrl()
 
-        val body = FormBody.Builder().add("qty", amount.toString()).build()
+        val body = FormBody.Builder().add(type.key, amount.toString()).build()
 
         val req = Request.Builder().url(url).post(body)
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<PortfolioResponse>(it) }
+            req.json()?.let { Json.decodeFromString<SuccessResponse>(it) }
         }
     }
 
-    suspend fun sellStock(symbol: String, amount: Float): PortfolioResponse? {
-        val url = "$BASE_URL/stocks/${symbol}/sell".toHttpUrl()
+    suspend fun sellAsset(symbol: String, amount: Float, type: ValueType): SuccessResponse? {
+        val url = "$BASE_URL/assets/${symbol}/sell".toHttpUrl()
 
-        val body = FormBody.Builder().add("qty", amount.toString()).build()
+        val body = FormBody.Builder().add(type.key, amount.toString()).build()
 
         val req = Request.Builder().url(url).post(body)
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<PortfolioResponse>(it) }
+            req.json()?.let { Json.decodeFromString<SuccessResponse>(it) }
         }
     }
 

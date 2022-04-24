@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
@@ -19,59 +20,59 @@ import com.google.android.material.color.MaterialColors
 import com.robinhood.ticker.TickerUtils
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
-import io.invest.app.databinding.FragmentStockDetailBinding
+import io.invest.app.databinding.FragmentAssetsDetailBinding
 import io.invest.app.net.Investio
-import io.invest.app.util.StockPrice
-import io.invest.app.view.viewmodel.StockViewModel
+import io.invest.app.util.AssetPrice
+import io.invest.app.view.viewmodel.AssetViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "StockDetail"
+private const val TAG = "AssetDetail"
 
 @AndroidEntryPoint
-class StockDetailFragment : Fragment() {
-    private var _binding: FragmentStockDetailBinding? = null
+class AssetDetailFragment : Fragment() {
+    private var _binding: FragmentAssetsDetailBinding? = null
     private val binding get() = _binding!!
 
     @Inject
     lateinit var investio: Investio
 
-    private val args: StockDetailFragmentArgs by navArgs()
-    private val stockViewModel: StockViewModel by viewModels()
+    private val args: AssetDetailFragmentArgs by navArgs()
+    private val assetViewModel: AssetViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStockDetailBinding.inflate(inflater)
+        _binding = FragmentAssetsDetailBinding.inflate(inflater)
 
         setupChart()
         binding.quote.setCharacterLists(TickerUtils.provideNumberList())
 
-        stockViewModel.stock.observe(viewLifecycleOwner) {
-            binding.symbol.text = it.symbol
-            binding.name.text = it.name
-        }
-
-        stockViewModel.quote.observe(viewLifecycleOwner) {
-            binding.quote.text = "\$${it.toPlainString()}"
-        }
-
-        stockViewModel.priceHistory.observe(viewLifecycleOwner) {
-            updateChart(it)
+        binding.actionTrade.setOnClickListener {
+            val action = AssetDetailFragmentDirections.actionAssetDetailFragmentToAssetTradeFragment(args.symbol)
+            findNavController().navigate(action)
         }
 
         lifecycleScope.launch {
-            stockViewModel.getStock(args.symbol)
-            stockViewModel.getQuote(args.symbol)
-            stockViewModel.getPriceHistory(args.symbol)
+            assetViewModel.getAssets(args.symbol)
+
+            assetViewModel.assetFlow.collect { data ->
+                data[args.symbol]?.let {
+                    binding.symbol.text = it.asset.symbol
+                    binding.name.text = it.asset.name
+                    binding.quote.text = "\$${it.quote}"
+                    updateChart(it.priceHistory)
+                }
+            }
         }
 
         return binding.root
     }
 
-    private fun updateChart(prices: List<StockPrice>) {
+    private fun updateChart(prices: List<AssetPrice>) {
         var min = Float.MAX_VALUE
         var max = Float.MIN_VALUE
 

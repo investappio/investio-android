@@ -17,10 +17,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
 import io.invest.app.databinding.FragmentRegisterBinding
 import io.invest.app.net.Investio
-import io.invest.app.util.formatDate
+import io.invest.app.util.format
+import io.invest.app.util.yearDateFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.toKotlinInstant
 import java.util.*
 import javax.inject.Inject
 
@@ -51,10 +53,8 @@ class RegisterFragment : Fragment() {
                 it.addOnPositiveButtonClickListener { time ->
                     dob.timeInMillis = time
                     binding.dobInput.setText(
-                        dob.formatDate(
-                            requireContext(),
-                            TimeZone.getTimeZone("gmt")
-                        )
+                        dob.toInstant().toKotlinInstant()
+                            .format(yearDateFormat(Locale.getDefault()))
                     )
                 }
 

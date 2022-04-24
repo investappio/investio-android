@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.databinding.FragmentBrowseBinding
 import io.invest.app.net.Investio
-import io.invest.app.view.adapter.StockSearchAdapter
+import io.invest.app.view.adapter.AssetSearchAdapter
 import javax.inject.Inject
 
 private const val TAG = "Browse"
@@ -24,7 +24,7 @@ class BrowseFragment : Fragment() {
     @Inject
     lateinit var investio: Investio
 
-    lateinit var stockSearchAdapter: StockSearchAdapter
+    lateinit var assetSearchAdapter: AssetSearchAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,17 +33,17 @@ class BrowseFragment : Fragment() {
     ): View {
         _binding = FragmentBrowseBinding.inflate(inflater, container, false)
 
-        stockSearchAdapter = StockSearchAdapter(requireContext(), investio)
-        binding.stockSearchInput.setAdapter(stockSearchAdapter)
+        assetSearchAdapter = AssetSearchAdapter(requireContext(), investio)
+        binding.assetSearchInput.setAdapter(assetSearchAdapter)
 
-        binding.stockSearchInput.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-            val stock = stockSearchAdapter.getItem(position)
-            binding.stockSearchInput.setText("")
+        binding.assetSearchInput.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
+            val asset = assetSearchAdapter.getItem(position)
+            binding.assetSearchInput.setText("")
 
             val action =
-                BrowseFragmentDirections.actionBrowseFragmentToStockDetailFragment(stock.symbol)
+                BrowseFragmentDirections.actionBrowseFragmentToAssetDetailFragment(asset.symbol)
             findNavController().navigate(action)
-            Log.d(TAG, stock.symbol)
+            Log.d(TAG, asset.symbol)
         }
 
         return binding.root

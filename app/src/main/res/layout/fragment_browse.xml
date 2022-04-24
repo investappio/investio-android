@@ -17,11 +17,11 @@
         app:startIconDrawable="@drawable/ic_search_24">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
-            android:id="@+id/stock_search_input"
+            android:id="@+id/asset_search_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:dropDownWidth="match_parent"
-            android:hint="@string/hint_search_stocks"
+            android:hint="@string/hint_search"
             android:imeOptions="actionSearch" />
     </com.google.android.material.textfield.TextInputLayout>
 

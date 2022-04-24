@@ -6,11 +6,21 @@ import kotlinx.serialization.json.Json
 
 val Json = Json { ignoreUnknownKeys = true }
 
+enum class ValueType(val key: String) {
+    NOTIONAL("notional"),
+    QUANTITY("qty")
+}
+
+enum class Side() {
+    BUY,
+    SELL
+}
+
 @Serializable
 data class AuthResponse(val success: Boolean = false, val token: String = "")
 
 @Serializable
-data class Stock(val symbol: String, val name: String)
+data class Asset(val symbol: String, val name: String)
 
 @Serializable
 data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, Float>)
@@ -22,13 +32,13 @@ data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: 
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
 
 @Serializable
-data class StockListResponse(val success: Boolean, val stocks: List<Stock>)
+data class AssetListResponse(val success: Boolean, val assets: List<Asset>)
 
 @Serializable
-data class StockResponse(val success: Boolean, val stock: Stock)
+data class AssetResponse(val success: Boolean, val asset: Asset)
 
 @Serializable
-data class StockPrice(
+data class AssetPrice(
     val symbol: String,
     val close: Float,
     val high: Float,
@@ -41,10 +51,16 @@ data class StockPrice(
 )
 
 @Serializable
+data class SuccessResponse(val success: Boolean)
+
+@Serializable
 data class QuoteResponse(val success: Boolean, val quote: Float)
 
 @Serializable
-data class PriceHistoryResponse(val success: Boolean, val prices: List<StockPrice>)
+data class MultiQuoteResponse(val success: Boolean, val quotes: Map<String, Float>)
+
+@Serializable
+data class PriceHistoryResponse(val success: Boolean, val prices: List<AssetPrice>)
 
 @Serializable
 data class PortfolioResponse(val success: Boolean = false, val portfolio: Portfolio)
