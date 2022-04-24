@@ -159,6 +159,16 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
+    suspend fun getProfile(): ProfileResponse? {
+        val url = "$BASE_URL/user/profile"
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<ProfileResponse>(it) }
+        }
+    }
+
     suspend fun buyAsset(symbol: String, amount: Float, type: ValueType): SuccessResponse? {
         val url = "$BASE_URL/assets/${symbol}/buy".toHttpUrl()
 

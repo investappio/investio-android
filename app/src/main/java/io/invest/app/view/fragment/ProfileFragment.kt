@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
 import io.invest.app.databinding.FragmentProfileBinding
+import io.invest.app.net.Investio
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,8 +20,12 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
+
     @Inject
     lateinit var localStore: LocalStore
+
+    @Inject
+    lateinit var investio: Investio
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +41,16 @@ class ProfileFragment : Fragment() {
 
             findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
         }
+
+        lifecycleScope.launchWhenCreated {
+            investio.getProfile()?.let { res ->
+                val profile = res.profile
+                binding.tvUser.text = profile.username
+                binding.tvName.text = profile.name
+
+            }
+        }
+
 
         return binding.root
     }
