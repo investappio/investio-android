@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
@@ -34,6 +36,7 @@ private const val TAG = "AssetDetail"
 class AssetDetailFragment : Fragment() {
     private var _binding: FragmentAssetsDetailBinding? = null
     private val binding get() = _binding!!
+    private val activity get() = requireActivity() as AppCompatActivity
 
     @Inject
     lateinit var investio: Investio
@@ -50,6 +53,8 @@ class AssetDetailFragment : Fragment() {
 
         setupChart()
         binding.quote.setCharacterLists(TickerUtils.provideNumberList())
+        activity.setSupportActionBar(binding.toolbar)
+        binding.toolbar.setupWithNavController(findNavController())
 
         binding.actionTrade.setOnClickListener {
             val action = AssetDetailFragmentDirections.actionAssetDetailFragmentToAssetTradeFragment(args.symbol)
