@@ -2,7 +2,6 @@ package io.invest.app.net
 
 import android.util.Log
 import io.invest.app.util.*
-import io.invest.app.view.viewmodel.TradeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -116,7 +115,8 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     suspend fun getQuotes(
         vararg symbols: String
     ): MultiQuoteResponse? {
-        val url = "$BASE_URL/assets/quotes?symbols=${symbols.joinToString(",")}".toHttpUrl()
+        val url = "$BASE_URL/assets/quotes".toHttpUrl().newBuilder()
+            .addQueryParameter("symbols", symbols.joinToString(",")).build()
 
         val req = Request.Builder().url(url).get()
 
@@ -129,8 +129,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         symbol: String,
         timeRange: TimeRange = TimeRange.WEEKS,
     ): PriceHistoryResponse? {
-        val url =
-            "$BASE_URL/assets/${symbol}/price/historical/${timeRange.range}".toHttpUrl()
+        val url = "$BASE_URL/assets/${symbol}/price/historical/${timeRange.range}"
 
         val req = Request.Builder().url(url).get()
 
@@ -166,6 +165,19 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
         return withContext(Dispatchers.IO) {
             req.json()?.let { Json.decodeFromString<ProfileResponse>(it) }
+        }
+    }
+
+    suspend fun getLeaderboard(start: Int = 0, count: Int = 25): LeaderboardResponse? {
+        val url = "$BASE_URL/user/leaderboard".toHttpUrl().newBuilder()
+            .addQueryParameter("start", start.toString())
+            .addQueryParameter("count", count.toString())
+            .build()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<LeaderboardResponse>(it) }
         }
     }
 

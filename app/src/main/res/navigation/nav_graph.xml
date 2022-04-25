@@ -113,7 +113,8 @@
 
     <fragment
         android:id="@+id/feed_fragment"
-        android:name="io.invest.app.view.fragment.FeedFragment"
+        android:name="io.invest.app.view.fragment.LeaderboardFragment"
+        tools:layout="@layout/fragment_leaderboard"
         android:label="@string/title_feed">
         <action
             android:id="@+id/action_feed_fragment_to_portfolio_fragment"

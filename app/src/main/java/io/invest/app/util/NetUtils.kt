@@ -32,10 +32,19 @@ data class ProfileResponse(val success: Boolean, val profile: Profile)
 data class Profile(val name: String, val email: String, val dob: Instant, val username: String, val phone: String? = null)
 
 @Serializable
+data class User(val name: String, val username: String)
+
+@Serializable
 data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: Float)
 
 @Serializable
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
+
+@Serializable
+data class LeaderboardItem(val timestamp: Instant, val value: Float, val cash: Float, val user: User)
+
+@Serializable
+data class LeaderboardResponse(val success: Boolean, val leaderboard: List<LeaderboardItem>)
 
 @Serializable
 data class AssetListResponse(val success: Boolean, val assets: List<Asset>)
