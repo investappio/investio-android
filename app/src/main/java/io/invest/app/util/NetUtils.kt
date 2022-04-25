@@ -26,6 +26,12 @@ data class Asset(val symbol: String, val name: String)
 data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, Float>)
 
 @Serializable
+data class ProfileResponse(val success: Boolean, val profile: Profile)
+
+@Serializable
+data class Profile(val name: String, val email: String, val dob: Instant, val username: String, val phone: String? = null)
+
+@Serializable
 data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: Float)
 
 @Serializable
