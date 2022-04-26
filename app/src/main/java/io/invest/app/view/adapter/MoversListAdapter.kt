@@ -2,8 +2,12 @@ package io.invest.app.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors
+import io.invest.app.R
 import io.invest.app.databinding.ListItemAssetTileBinding
+import io.invest.app.view.fragment.BrowseFragmentDirections
 import io.invest.app.view.viewmodel.AssetPriceModel
 import java.math.RoundingMode
 
@@ -37,7 +41,21 @@ class MoversListAdapter(val itemList: MutableList<AssetPriceModel>) :
             binding.symbol.text = item.asset.symbol
             binding.name.text = item.asset.name
             binding.changePercent.text =
-                if (item.price.changePercent < 0) "$percent" else "+$percent"
+                if (item.price.changePercent < 0) "$percent%" else "+$percent%"
+
+            val changeColor = if (item.price.changePercent < 0) MaterialColors.getColor(
+                binding.root,
+                androidx.appcompat.R.attr.colorError
+            ) else MaterialColors.getColor(binding.root, R.attr.colorSuccess)
+
+            binding.changePercent.setTextColor(changeColor)
+            binding.symbol.setTextColor(changeColor)
+
+            binding.root.setOnClickListener {
+                val action =
+                    BrowseFragmentDirections.actionBrowseFragmentToAssetDetailFragment(item.asset.symbol)
+                it.findNavController().navigate(action)
+            }
         }
     }
 }

@@ -17,9 +17,11 @@ import io.invest.app.databinding.FragmentBrowseBinding
 import io.invest.app.net.Investio
 import io.invest.app.view.adapter.AssetSearchAdapter
 import io.invest.app.view.adapter.MoversListAdapter
+import io.invest.app.view.adapter.NewsListAdapter
 import io.invest.app.view.viewmodel.AssetPriceModel
 import io.invest.app.view.viewmodel.BrowseViewModel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,6 +52,10 @@ class BrowseFragment : Fragment() {
         val moversAdapter = MoversListAdapter(moversList)
         binding.topMoverList.adapter = moversAdapter
 
+        val newsAdapter = NewsListAdapter()
+        binding.newsList.adapter = newsAdapter
+        binding.newsList.setHasFixedSize(false)
+
         binding.assetSearchInput.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
             val asset = assetSearchAdapter.getItem(position)
             binding.assetSearchInput.setText("")
@@ -71,6 +77,10 @@ class BrowseFragment : Fragment() {
 
                         moversAdapter.notifyItemRangeChanged(0, it.size)
                     }
+                }
+
+                launch {
+                    browseViewModel.newsFlow.collectLatest(newsAdapter::submitData)
                 }
             }
         }

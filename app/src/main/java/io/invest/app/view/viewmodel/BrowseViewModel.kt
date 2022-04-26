@@ -3,8 +3,14 @@ package io.invest.app.view.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.invest.app.net.Investio
+import io.invest.app.net.LeaderboardPagingSource
+import io.invest.app.net.NewsPagingSource
 import io.invest.app.util.Asset
 import io.invest.app.util.AssetPrice
 import java.math.BigDecimal
@@ -15,6 +21,14 @@ class BrowseViewModel @Inject constructor(private val investio: Investio) : View
     private val movers = MutableLiveData<List<AssetPriceModel>>()
 
     val moversFlow = movers.asFlow()
+
+    val newsFlow = Pager(
+        config = PagingConfig(
+            pageSize = 25,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { NewsPagingSource(investio) }
+    ).flow.cachedIn(viewModelScope)
 
     suspend fun getMovers(count: Int) {
         investio.movers(count)?.let { res ->

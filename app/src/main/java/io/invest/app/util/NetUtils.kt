@@ -67,6 +67,12 @@ data class AssetPrice(
 )
 
 @Serializable
+data class News(val id: Int, val author: String, val timestamp: Instant, val headline: String, val url: String, val symbols: List<String>, val source: String)
+
+@Serializable
+data class NewsResponse(val success: Boolean, val prev: Instant?, val news: List<News>)
+
+@Serializable
 data class MoversResponse(val success: Boolean, val assets: List<AssetPrice>)
 
 @Serializable

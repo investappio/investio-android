@@ -177,9 +177,9 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/asset_list"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:nestedScrollingEnabled="true"
+                        android:nestedScrollingEnabled="false"
                         android:overScrollMode="never"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="parent"

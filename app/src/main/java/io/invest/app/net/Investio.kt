@@ -4,6 +4,8 @@ import android.util.Log
 import io.invest.app.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.decodeFromString
 import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -178,6 +180,19 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
         return withContext(Dispatchers.IO) {
             req.json()?.let { Json.decodeFromString<LeaderboardResponse>(it) }
+        }
+    }
+
+    suspend fun getNews(start: Instant? = null, count: Int = 25): NewsResponse? {
+        val url = "$BASE_URL/assets/news".toHttpUrl().newBuilder()
+            .addQueryParameter("start", start?.toEpochMilliseconds().toString())
+            .addQueryParameter("count", count.toString())
+            .build()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<NewsResponse>(it) }
         }
     }
 
