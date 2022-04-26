@@ -44,6 +44,12 @@ data class AssetListResponse(val success: Boolean, val assets: List<Asset>)
 data class AssetResponse(val success: Boolean, val asset: Asset)
 
 @Serializable
+data class Order(val symbol: String, val qty: Float, val notional: Float, val side: String, val timestamp: Instant)
+
+@Serializable
+data class OrderResponse(val success: Boolean, val orders: List<Order>)
+
+@Serializable
 data class AssetPrice(
     val symbol: String,
     val close: Float,
@@ -70,3 +76,4 @@ data class PriceHistoryResponse(val success: Boolean, val prices: List<AssetPric
 
 @Serializable
 data class PortfolioResponse(val success: Boolean = false, val portfolio: Portfolio)
+

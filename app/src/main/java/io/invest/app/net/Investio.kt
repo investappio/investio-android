@@ -5,6 +5,9 @@ import io.invest.app.util.*
 import io.invest.app.view.viewmodel.TradeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.toKotlinInstant
 import kotlinx.serialization.decodeFromString
 import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -122,6 +125,19 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
         return withContext(Dispatchers.IO) {
             req.json()?.let { Json.decodeFromString<MultiQuoteResponse>(it) }
+        }
+    }
+
+    suspend fun getOrders(
+        time : Instant = Clock.System.now(),
+        count : Int = 5
+    ): OrderResponse? {
+        val url = "$BASE_URL/user/orders".toHttpUrl()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO){
+            req.json()?.let { Json.decodeFromString<OrderResponse>(it) }
         }
     }
 
