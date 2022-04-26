@@ -12,6 +12,8 @@ import java.util.*
 
 
 fun yearDateFormat (locale: Locale) = DateTimeFormatter.ofPattern("MMM d, yyyy", locale)
+fun yearMonthFormat (locale: Locale) = DateTimeFormatter.ofPattern("MMM yyyy", locale)
+fun monthDateFormat (locale: Locale) = DateTimeFormatter.ofPattern("MMM d", locale)
 
 enum class TimeRange(val range: String) {
     WEEKS("2w"),

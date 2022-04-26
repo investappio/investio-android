@@ -9,9 +9,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.invest.app.databinding.ListItemNewsBinding
 import io.invest.app.util.News
+import io.invest.app.util.format
+import io.invest.app.util.monthDateFormat
+import io.invest.app.util.yearMonthFormat
 import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toDateTimePeriod
+import java.util.*
 
 class NewsListAdapter : PagingDataAdapter<News, NewsListAdapter.ViewHolder>(NewsComparator) {
 
@@ -36,8 +39,17 @@ class NewsListAdapter : PagingDataAdapter<News, NewsListAdapter.ViewHolder>(News
         fun bind(item: News) {
             binding.source.text = item.source
             binding.interval.text =
-                item.timestamp.periodUntil(Clock.System.now(), TimeZone.currentSystemDefault())
-                    .toString()
+                Clock.System.now().minus(item.timestamp).toDateTimePeriod().let { period ->
+                    when (true) {
+                        (period.years > 0) -> item.timestamp.format(yearMonthFormat(Locale.getDefault()))
+                        (period.months > 0) -> item.timestamp.format(monthDateFormat(Locale.getDefault()))
+                        (period.days > 0) -> "${period.days}d"
+                        (period.hours > 0) -> "${period.hours}h"
+                        (period.minutes > 0) -> "${period.minutes}m"
+                        (period.seconds > 0) -> "${period.seconds}s"
+                        else -> "1s"
+                    }
+                }
             binding.headline.text = item.headline
 
             binding.root.setOnClickListener {
