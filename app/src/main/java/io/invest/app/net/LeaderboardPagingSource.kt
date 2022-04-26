@@ -1,14 +1,11 @@
 package io.invest.app.net
 
-import androidx.paging.*
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import io.invest.app.util.LeaderboardItem
-import kotlinx.coroutines.flow.Flow
 import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class LeaderboardPagingSource @Inject constructor(private val investio: Investio) :
+class LeaderboardPagingSource constructor(private val investio: Investio) :
     PagingSource<Int, LeaderboardItem>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, LeaderboardItem> {
         val pos = params.key ?: 0

@@ -62,8 +62,12 @@ data class AssetPrice(
     val volume: Int,
     val average: Float,
     val change: Float,
-    val timestamp: Instant
+    val timestamp: Instant,
+    val changePercent: Float
 )
+
+@Serializable
+data class MoversResponse(val success: Boolean, val assets: List<AssetPrice>)
 
 @Serializable
 data class SuccessResponse(val success: Boolean)

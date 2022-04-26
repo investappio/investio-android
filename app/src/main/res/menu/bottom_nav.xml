@@ -9,9 +9,9 @@
         android:icon="@drawable/ic_search_24"
         android:title="@string/title_browse" />
     <item
-        android:id="@id/feed_fragment"
+        android:id="@id/leaderboard_fragment"
         android:icon="@drawable/ic_global_24"
-        android:title="@string/title_feed" />
+        android:title="@string/title_leaderboard" />
     <item
         android:id="@id/profile_fragment"
         android:icon="@drawable/ic_person_24"

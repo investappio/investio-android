@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import io.invest.app.R
 import io.invest.app.databinding.ListItemAssetBinding
 import io.invest.app.util.AssetPrice
-import io.invest.app.view.viewmodel.AssetViewModel
+import io.invest.app.view.viewmodel.AssetModel
 
 class AssetListAdapter(val itemList: MutableList<String> = mutableListOf()) :
     RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
     var portfolio: Map<String, Float> = emptyMap()
-    var assets: Map<String, AssetViewModel.AssetModel> = emptyMap()
+    var assets: Map<String, AssetModel> = emptyMap()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ListItemAssetBinding.inflate(
@@ -41,7 +41,7 @@ class AssetListAdapter(val itemList: MutableList<String> = mutableListOf()) :
     inner class ViewHolder(private val binding: ListItemAssetBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(model: AssetViewModel.AssetModel?) {
+        fun bind(model: AssetModel?) {
             model?.let {
                 binding.symbol.text = it.asset.symbol
                 binding.price.text = "\$${it.quote}"
@@ -59,7 +59,7 @@ class AssetListAdapter(val itemList: MutableList<String> = mutableListOf()) :
             }
         }
 
-        fun bind(model: AssetViewModel.AssetModel?, count: Float) {
+        fun bind(model: AssetModel?, count: Float) {
             bind(model)
             binding.quantity.visibility = View.VISIBLE
             binding.name.visibility = View.GONE

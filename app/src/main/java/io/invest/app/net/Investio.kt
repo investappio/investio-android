@@ -63,7 +63,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun movers(count: Int): AssetListResponse? {
+    suspend fun movers(count: Int): MoversResponse? {
         val url =
             "$BASE_URL/assets/movers".toHttpUrl().newBuilder()
                 .addQueryParameter("count", count.toString())
@@ -72,7 +72,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<AssetListResponse>(it) }
+            req.json()?.let { Json.decodeFromString<MoversResponse>(it) }
         }
     }
 

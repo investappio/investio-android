@@ -3,7 +3,7 @@
 
     <string name="title_portfolio">Portfolio</string>
     <string name="title_browse">Browse</string>
-    <string name="title_feed">Feed</string>
+    <string name="title_leaderboard">Leaderboard</string>
     <string name="title_profile">Profile</string>
     <string name="label_name">Name</string>
     <string name="label_username">Username</string>
@@ -24,4 +24,5 @@
     <string name="year_history_label">1y</string>
     <string name="label_assets">Assets</string>
     <string name="action_refresh">Refresh</string>
+    <string name="label_movers">Movers</string>
 </resources>
