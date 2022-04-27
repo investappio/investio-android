@@ -2,12 +2,10 @@ package io.invest.app.net
 
 import android.util.Log
 import io.invest.app.util.*
-import io.invest.app.view.viewmodel.TradeViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toKotlinInstant
 import kotlinx.serialization.decodeFromString
 import okhttp3.FormBody
 import okhttp3.HttpUrl.Companion.toHttpUrl

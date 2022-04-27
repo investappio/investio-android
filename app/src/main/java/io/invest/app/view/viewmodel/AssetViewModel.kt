@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssetViewModel @Inject constructor(private val investio: Investio) : ViewModel() {
-    private val assets =  MutableLiveData<Map<String, Asset>>()
+    private val assets = MutableLiveData<Map<String, Asset>>()
     private val priceHistories = MutableLiveData<Map<String, List<AssetPrice>>>()
     private val quotes = MutableLiveData<Map<String, BigDecimal>>()
 

@@ -29,7 +29,13 @@ data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, 
 data class ProfileResponse(val success: Boolean, val profile: Profile)
 
 @Serializable
-data class Profile(val name: String, val email: String, val dob: Instant, val username: String, val phone: String? = null)
+data class Profile(
+    val name: String,
+    val email: String,
+    val dob: Instant,
+    val username: String,
+    val phone: String? = null
+)
 
 @Serializable
 data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: Float)
@@ -44,7 +50,13 @@ data class AssetListResponse(val success: Boolean, val assets: List<Asset>)
 data class AssetResponse(val success: Boolean, val asset: Asset)
 
 @Serializable
-data class Order(val symbol: String, val qty: Float, val notional: Float, val side: String, val timestamp: Instant)
+data class Order(
+    val symbol: String,
+    val qty: Float,
+    val notional: Float,
+    val side: String,
+    val timestamp: Instant
+)
 
 @Serializable
 data class OrderResponse(val success: Boolean, val orders: List<Order>)
