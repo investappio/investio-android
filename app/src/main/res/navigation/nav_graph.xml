@@ -55,8 +55,8 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_portfolio_fragment_to_feed_fragment"
-            app:destination="@id/feed_fragment"
+            android:id="@+id/action_portfolio_fragment_to_leaderboard_fragment"
+            app:destination="@id/leaderboard_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
@@ -80,8 +80,8 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_browse_fragment_to_feed_fragment"
-            app:destination="@id/feed_fragment"
+            android:id="@+id/action_browse_fragment_to_leaderboard_fragment"
+            app:destination="@id/leaderboard_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
@@ -105,28 +105,29 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_profile_fragment_to_feed_fragment"
-            app:destination="@id/feed_fragment"
+            android:id="@+id/action_profile_fragment_to_leaderboard_fragment"
+            app:destination="@id/leaderboard_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/feed_fragment"
-        android:name="io.invest.app.view.fragment.FeedFragment"
-        android:label="@string/title_feed">
+        android:id="@+id/leaderboard_fragment"
+        android:name="io.invest.app.view.fragment.LeaderboardFragment"
+        tools:layout="@layout/fragment_leaderboard"
+        android:label="@string/title_leaderboard">
         <action
-            android:id="@+id/action_feed_fragment_to_portfolio_fragment"
+            android:id="@+id/action_leaderboard_fragment_to_portfolio_fragment"
             app:destination="@id/portfolio_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_feed_fragment_to_login_fragment"
+            android:id="@+id/action_leaderboard_fragment_to_login_fragment"
             app:destination="@id/login_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_feed_fragment_to_profile_fragment"
+            android:id="@+id/action_leaderboard_fragment_to_profile_fragment"
             app:destination="@id/profile_fragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />

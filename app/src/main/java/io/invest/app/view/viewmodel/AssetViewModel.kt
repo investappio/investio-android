@@ -54,10 +54,10 @@ class AssetViewModel @Inject constructor(private val investio: Investio) : ViewM
         priceHistories.value = prices
         this.quotes.value = quotes
     }
-
-    data class AssetModel(
-        val asset: Asset,
-        val priceHistory: List<AssetPrice>,
-        val quote: BigDecimal
-    )
 }
+
+data class AssetModel(
+    val asset: Asset,
+    val priceHistory: List<AssetPrice>,
+    val quote: BigDecimal
+)

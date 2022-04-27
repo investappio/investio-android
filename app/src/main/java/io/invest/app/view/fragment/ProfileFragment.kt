@@ -20,7 +20,7 @@ import javax.inject.Inject
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-
+    private val orderList = mutableListOf<Order>()
 
     @Inject
     lateinit var localStore: LocalStore
@@ -35,6 +35,9 @@ class ProfileFragment : Fragment() {
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
+        val orderAdapter = OrderListAdapter(orderList)
+        binding.orderList.adapter = orderAdapter
+
         binding.logoutBtn.setOnClickListener {
             lifecycleScope.launch(Dispatchers.IO) {
                 localStore.setApiToken("")
@@ -44,18 +47,27 @@ class ProfileFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            investio.getProfile()?.let { res ->
-                val profile = res.profile
-                binding.tvUser.text = profile.username
-                binding.tvName.text = profile.name
+            launch {
+                investio.getProfile()?.let { res ->
+                    val profile = res.profile
+                    binding.tvUser.text = profile.username
+                    binding.tvName.text = profile.name
+                }
+            }
 
+            launch {
+                investio.getOrders()?.let { res ->
+                    val orders = res.orders
+                    orderList.clear()
+                    orderList.addAll(orders)
+                    orderAdapter.notifyItemRangeChanged(0, orders.size)
+                }
             }
             investio.getOrders()?.let { res ->
                 val adapter = OrderListAdapter(res.orders.toMutableList())
                 binding.rvOrderList.adapter = adapter
             }
         }
-
 
         return binding.root
     }
