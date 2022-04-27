@@ -66,6 +66,8 @@ dependencies {
     implementation libs.datastore
     implementation libs.protobuf.javalite
 
+    implementation libs.paging
+
     implementation libs.robinhood.spark
     implementation libs.robinhood.ticker
 

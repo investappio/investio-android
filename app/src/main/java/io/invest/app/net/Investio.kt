@@ -65,7 +65,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         }
     }
 
-    suspend fun movers(count: Int): AssetListResponse? {
+    suspend fun movers(count: Int): MoversResponse? {
         val url =
             "$BASE_URL/assets/movers".toHttpUrl().newBuilder()
                 .addQueryParameter("count", count.toString())
@@ -74,7 +74,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         val req = Request.Builder().url(url).get()
 
         return withContext(Dispatchers.IO) {
-            req.json()?.let { Json.decodeFromString<AssetListResponse>(it) }
+            req.json()?.let { Json.decodeFromString<MoversResponse>(it) }
         }
     }
 
@@ -117,7 +117,8 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     suspend fun getQuotes(
         vararg symbols: String
     ): MultiQuoteResponse? {
-        val url = "$BASE_URL/assets/quotes?symbols=${symbols.joinToString(",")}".toHttpUrl()
+        val url = "$BASE_URL/assets/quotes".toHttpUrl().newBuilder()
+            .addQueryParameter("symbols", symbols.joinToString(",")).build()
 
         val req = Request.Builder().url(url).get()
 
@@ -143,8 +144,7 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
         symbol: String,
         timeRange: TimeRange = TimeRange.WEEKS,
     ): PriceHistoryResponse? {
-        val url =
-            "$BASE_URL/assets/${symbol}/price/historical/${timeRange.range}".toHttpUrl()
+        val url = "$BASE_URL/assets/${symbol}/price/historical/${timeRange.range}"
 
         val req = Request.Builder().url(url).get()
 
@@ -180,6 +180,32 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
 
         return withContext(Dispatchers.IO) {
             req.json()?.let { Json.decodeFromString<ProfileResponse>(it) }
+        }
+    }
+
+    suspend fun getLeaderboard(start: Int = 0, count: Int = 25): LeaderboardResponse? {
+        val url = "$BASE_URL/user/leaderboard".toHttpUrl().newBuilder()
+            .addQueryParameter("start", start.toString())
+            .addQueryParameter("count", count.toString())
+            .build()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<LeaderboardResponse>(it) }
+        }
+    }
+
+    suspend fun getNews(start: Instant? = null, count: Int = 25): NewsResponse? {
+        val url = "$BASE_URL/assets/news".toHttpUrl().newBuilder()
+            .addQueryParameter("start", start?.toEpochMilliseconds().toString())
+            .addQueryParameter("count", count.toString())
+            .build()
+
+        val req = Request.Builder().url(url).get()
+
+        return withContext(Dispatchers.IO) {
+            req.json()?.let { Json.decodeFromString<NewsResponse>(it) }
         }
     }
 

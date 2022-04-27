@@ -22,11 +22,18 @@ import javax.inject.Inject
 
 private const val TAG = "MainActivity"
 
+// Used to know when we are at a "top level" destination
+val appBarConfig = AppBarConfiguration.Builder(
+    R.id.portfolio_fragment,
+    R.id.profile_fragment,
+    R.id.browse_fragment,
+    R.id.leaderboard_fragment
+).build()
+
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var appBarConfig: AppBarConfiguration
 
     @Inject
     lateinit var localStore: LocalStore
@@ -36,15 +43,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         navController = binding.navHostFragment.getFragment<NavHostFragment>().navController
-
-        // Used to know when we are at a "top level" destination
-        appBarConfig = AppBarConfiguration.Builder(
-            R.id.portfolio_fragment,
-            R.id.profile_fragment,
-            R.id.browse_fragment,
-            R.id.feed_fragment
-        ).build()
-
         setupNavigation()
 
         lifecycleScope.launch {

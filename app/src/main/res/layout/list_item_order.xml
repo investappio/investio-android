@@ -3,45 +3,44 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvSymbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="13dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="GME" />
-
-    <TextView
-        android:id="@+id/tvQty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/tvSymbol"
-        tools:layout_editor_absoluteY="43dp"
-        tools:text="5" />
 
     <TextView
         android:id="@+id/tvNotional"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/tvSymbol"
-        tools:layout_editor_absoluteY="83dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="203.5" />
 
     <TextView
         android:id="@+id/tvSide"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/tvSymbol"
-        tools:layout_editor_absoluteY="114dp"
+        android:layout_marginStart="8dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintStart_toEndOf="@+id/tvSymbol"
+        app:layout_constraintTop_toTopOf="@+id/tvSymbol"
         tools:text="Buy" />
 
     <TextView
         android:id="@+id/tvTimestamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvSymbol"
-        tools:layout_editor_absoluteY="149dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvSymbol"
         tools:text="January 1st, 2002" />
 </androidx.constraintlayout.widget.ConstraintLayout>

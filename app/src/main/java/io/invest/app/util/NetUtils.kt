@@ -38,10 +38,19 @@ data class Profile(
 )
 
 @Serializable
+data class User(val name: String, val username: String)
+
+@Serializable
 data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: Float)
 
 @Serializable
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
+
+@Serializable
+data class LeaderboardItem(val timestamp: Instant, val value: Float, val cash: Float, val user: User)
+
+@Serializable
+data class LeaderboardResponse(val success: Boolean, val leaderboard: List<LeaderboardItem>)
 
 @Serializable
 data class AssetListResponse(val success: Boolean, val assets: List<Asset>)
@@ -71,8 +80,18 @@ data class AssetPrice(
     val volume: Int,
     val average: Float,
     val change: Float,
-    val timestamp: Instant
+    val timestamp: Instant,
+    val changePercent: Float
 )
+
+@Serializable
+data class News(val id: Int, val author: String, val timestamp: Instant, val headline: String, val url: String, val symbols: List<String>, val source: String)
+
+@Serializable
+data class NewsResponse(val success: Boolean, val prev: Instant?, val news: List<News>)
+
+@Serializable
+data class MoversResponse(val success: Boolean, val assets: List<AssetPrice>)
 
 @Serializable
 data class SuccessResponse(val success: Boolean)
