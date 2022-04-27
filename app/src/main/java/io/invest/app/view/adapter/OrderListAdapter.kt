@@ -7,6 +7,7 @@ import io.invest.app.databinding.ListItemOrderBinding
 import io.invest.app.util.Order
 import io.invest.app.util.format
 import io.invest.app.util.yearDateFormat
+import java.math.BigDecimal
 import java.util.*
 
 class OrderListAdapter(val itemList: MutableList<Order> = mutableListOf()) :
@@ -34,9 +35,8 @@ class OrderListAdapter(val itemList: MutableList<Order> = mutableListOf()) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(order: Order) {
             binding.tvSymbol.text = order.symbol
-            binding.tvQty.text = order.qty.toString()
-            binding.tvNotional.text = order.notional.toString()
-            binding.tvSide.text = order.side
+            binding.tvNotional.text = "${if (order.side == "buy") "-" else "+"}\$${order.notional.toBigDecimal().setScale(2, BigDecimal.ROUND_HALF_UP)}"
+            binding.tvSide.text = order.side.replaceFirstChar { it.uppercase() }
             binding.tvTimestamp.text = order.timestamp.format(yearDateFormat(Locale.getDefault()))
         }
     }

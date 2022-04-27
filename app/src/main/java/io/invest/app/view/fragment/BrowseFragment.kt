@@ -63,7 +63,6 @@ class BrowseFragment : Fragment() {
             val action =
                 BrowseFragmentDirections.actionBrowseFragmentToAssetDetailFragment(asset.symbol)
             findNavController().navigate(action)
-            Log.d(TAG, asset.symbol)
         }
 
         lifecycleScope.launchWhenCreated {
@@ -72,8 +71,6 @@ class BrowseFragment : Fragment() {
                     browseViewModel.moversFlow.collect {
                         moversList.clear()
                         moversList.addAll(it)
-
-                        Log.d(TAG, it.toString())
 
                         moversAdapter.notifyItemRangeChanged(0, it.size)
                     }
