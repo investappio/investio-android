@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.LocalStore
 import io.invest.app.databinding.FragmentProfileBinding
 import io.invest.app.net.Investio
+import io.invest.app.view.adapter.OrderListAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,6 +50,10 @@ class ProfileFragment : Fragment() {
                 binding.tvUser.text = profile.username
                 binding.tvName.text = profile.name
 
+            }
+            investio.getOrders()?.let { res ->
+                val adapter = OrderListAdapter(res.orders.toMutableList())
+                binding.rvOrderList.adapter = adapter
             }
         }
 

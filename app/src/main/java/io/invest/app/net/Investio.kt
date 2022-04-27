@@ -129,14 +129,16 @@ class Investio @Inject constructor(private val client: OkHttpClient) {
     }
 
     suspend fun getOrders(
-        time : Instant = Clock.System.now(),
-        count : Int = 5
+        time: Instant = Clock.System.now(),
+        count: Int = 5
     ): OrderResponse? {
-        val url = "$BASE_URL/user/orders".toHttpUrl()
+        val url = "$BASE_URL/user/orders".toHttpUrl().newBuilder()
+            .addQueryParameter("start", time.toEpochMilliseconds().toString())
+            .addQueryParameter("count", count.toString()).build()
 
         val req = Request.Builder().url(url).get()
 
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             req.json()?.let { Json.decodeFromString<OrderResponse>(it) }
         }
     }

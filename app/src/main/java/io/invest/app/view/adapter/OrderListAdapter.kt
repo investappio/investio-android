@@ -36,7 +36,15 @@ class OrderListAdapter(val itemList: MutableList<Order> = mutableListOf()): Recy
                 binding.tvSymbol.text = order.symbol
                 binding.tvQty.text = order.qty.toString()
                 binding.tvNotional.text = order.notional.toString()
-                binding.tvSide.text = order.side
+                if(order.side == "buy")
+                {
+                    binding.tvSide.text = "BUY"
+                }
+                else
+                {
+                    binding.tvSide.text = "SELL"
+                }
+
                 binding.tvTimestamp.text = order.timestamp.format(yearDateFormat(Locale.getDefault()))
             }
         }
