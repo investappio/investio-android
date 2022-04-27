@@ -52,7 +52,8 @@ class AssetDetailFragment : Fragment() {
         binding.quote.setCharacterLists(TickerUtils.provideNumberList())
 
         binding.actionTrade.setOnClickListener {
-            val action = AssetDetailFragmentDirections.actionAssetDetailFragmentToAssetTradeFragment(args.symbol)
+            val action =
+                AssetDetailFragmentDirections.actionAssetDetailFragmentToAssetTradeFragment(args.symbol)
             findNavController().navigate(action)
         }
 
