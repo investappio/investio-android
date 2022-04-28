@@ -15,7 +15,7 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val BASE_URL = "http://10.0.2.2:3000"
+private const val BASE_URL = "https://investio.tolunla.de"
 private const val TAG = "Investio"
 
 @Singleton
