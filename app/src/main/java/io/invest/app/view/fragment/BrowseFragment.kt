@@ -1,7 +1,6 @@
 package io.invest.app.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,7 @@ class BrowseFragment : Fragment() {
     private var _binding: FragmentBrowseBinding? = null
     private val binding get() = _binding!!
     private val browseViewModel: BrowseViewModel by viewModels()
-    private val moversList : MutableList<AssetPriceModel> = mutableListOf()
+    private val moversList: MutableList<AssetPriceModel> = mutableListOf()
 
     @Inject
     lateinit var investio: Investio

@@ -114,8 +114,8 @@
     <fragment
         android:id="@+id/leaderboard_fragment"
         android:name="io.invest.app.view.fragment.LeaderboardFragment"
-        tools:layout="@layout/fragment_leaderboard"
-        android:label="@string/title_leaderboard">
+        android:label="@string/title_leaderboard"
+        tools:layout="@layout/fragment_leaderboard">
         <action
             android:id="@+id/action_leaderboard_fragment_to_portfolio_fragment"
             app:destination="@id/portfolio_fragment"

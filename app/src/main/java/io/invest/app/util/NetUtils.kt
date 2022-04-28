@@ -47,7 +47,12 @@ data class PortfolioHistory(val timestamp: Instant, val value: Float, val cash: 
 data class PortfolioHistoryResponse(val success: Boolean, val history: List<PortfolioHistory>)
 
 @Serializable
-data class LeaderboardItem(val timestamp: Instant, val value: Float, val cash: Float, val user: User)
+data class LeaderboardItem(
+    val timestamp: Instant,
+    val value: Float,
+    val cash: Float,
+    val user: User
+)
 
 @Serializable
 data class LeaderboardResponse(val success: Boolean, val leaderboard: List<LeaderboardItem>)
@@ -85,7 +90,15 @@ data class AssetPrice(
 )
 
 @Serializable
-data class News(val id: Int, val author: String, val timestamp: Instant, val headline: String, val url: String, val symbols: List<String>, val source: String)
+data class News(
+    val id: Int,
+    val author: String,
+    val timestamp: Instant,
+    val headline: String,
+    val url: String,
+    val symbols: List<String>,
+    val source: String
+)
 
 @Serializable
 data class NewsResponse(val success: Boolean, val prev: Instant?, val news: List<News>)

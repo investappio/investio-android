@@ -11,7 +11,6 @@ import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import io.invest.app.R
 import io.invest.app.databinding.FragmentLeaderboardBinding
-import io.invest.app.view.MainActivity
 import io.invest.app.view.adapter.LeaderboardAdapter
 import io.invest.app.view.appBarConfig
 import io.invest.app.view.viewmodel.LeaderboardViewModel

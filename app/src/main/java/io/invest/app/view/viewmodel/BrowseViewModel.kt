@@ -9,7 +9,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.invest.app.net.Investio
-import io.invest.app.net.LeaderboardPagingSource
 import io.invest.app.net.NewsPagingSource
 import io.invest.app.util.Asset
 import io.invest.app.util.AssetPrice
