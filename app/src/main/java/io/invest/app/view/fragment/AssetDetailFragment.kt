@@ -70,7 +70,23 @@ class AssetDetailFragment : Fragment() {
                     binding.symbol.text = it.asset.symbol
                     binding.name.text = it.asset.name
                     binding.quote.text = "\$${it.quote}"
+
+                    it.asset.company?.let { company ->
+                        binding.aboutSection.visibility =
+                            if (company.description.isEmpty()) View.GONE else View.VISIBLE
+                        binding.description.text = company.description
+                    }
+
                     updateChart(it.priceHistory)
+
+                    val lastPrice = it.priceHistory.last()
+
+                    binding.open.text = lastPrice.open.toString()
+                    binding.close.text = lastPrice.close.toString()
+                    binding.low.text = lastPrice.low.toString()
+                    binding.high.text = lastPrice.high.toString()
+                    binding.volume.text = lastPrice.volume.toString()
+                    binding.average.text = lastPrice.average.toString()
                 }
             }
         }

@@ -30,10 +30,5 @@ class LeaderboardPagingSource constructor(private val investio: Investio) :
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, LeaderboardItem>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
-        }
-    }
+    override fun getRefreshKey(state: PagingState<Int, LeaderboardItem>): Int? = null
 }
