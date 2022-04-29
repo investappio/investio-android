@@ -1,5 +1,6 @@
 package io.invest.app.view.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +45,7 @@ class ProfileFragment : Fragment() {
                 localStore.setApiToken("")
             }
 
-            findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToLoginFragment())
+            startActivity(Intent.makeRestartActivityTask(activity?.intent?.component))
         }
 
         lifecycleScope.launchWhenCreated {
