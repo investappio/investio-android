@@ -3,6 +3,7 @@ package io.invest.app.util
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNames
 
 val Json = Json { ignoreUnknownKeys = true }
 
@@ -20,7 +21,7 @@ enum class Side() {
 data class AuthResponse(val success: Boolean = false, val token: String = "")
 
 @Serializable
-data class Asset(val symbol: String, val name: String)
+data class Asset(val symbol: String, val name: String, val company: Company? = null)
 
 @Serializable
 data class Portfolio(val cash: Float, val value: Float, val assets: Map<String, Float>)
@@ -98,6 +99,14 @@ data class News(
     val url: String,
     val symbols: List<String>,
     val source: String
+)
+
+@Serializable
+data class Company(
+    val website: String,
+    val description: String,
+    @JsonNames("CEO") val ceo: String,
+    val tags: List<String>
 )
 
 @Serializable
